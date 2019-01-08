@@ -61,7 +61,6 @@ beehive1=beehive(50,300,0)
 
 rect1=pygame.Rect((flower1.x,flower1.y,104,100)) #rect for flower
 rect2=pygame.Rect((beehive1.x,beehive1.y,150,117))
-rect2.fill((255,0,0))
 
 def on_stop_at_flower():
     if mybee.honey<100:
