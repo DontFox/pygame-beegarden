@@ -28,8 +28,7 @@ speed_honey=1
 # config bee
 class bee:
     speed=3
-    width=96
-    height=82
+
     honey=0
     honey_max=100
     left=False
@@ -37,23 +36,29 @@ class bee:
     def __init__(self,x,y):
         self.x=x
         self.y=y
+        self.width = 96
+        self.height = 82
+    def create_rect(self):
+        self.rect=pygame.Rect((self.x,self.y),(self.width,self.height))
 
 class flower:
-    width=100
-    height=104
     def __init__(self,x,y,honey):
         self.x=x
         self.y=y
         self.honey=honey
+        self.width = 100
+        self.height = 104
+        self.rect=pygame.Rect((self.x,self.y),(self.width,self.height))
 
 class beehive:
     honey_max=200
-    width=150
-    height=117
     def __init__(self,x,y,honey):
         self.x=x
         self.y=y
         self.honey=honey
+        self.width = 150
+        self.height = 117
+        self.rect=pygame.Rect((self.x,self.y),(self.width,self.height))
 
 
 
@@ -101,6 +106,7 @@ while 1:
 
 
 # [2/3]
+
     keys=pygame.key.get_pressed()
 
     if keys[pygame.K_LEFT]:
@@ -120,10 +126,16 @@ while 1:
         if mybee.y<=limit_down:
             mybee.y += mybee.speed
 
-    if mybee.x+mybee.width>flower1.x and mybee.y<flower1.y+flower1.height:
+    mybee.create_rect()
+    # if mybee.x+mybee.width>flower1.x and mybee.y<flower1.y+flower1.height:
+    #     on_stop_at_flower()
+    # if mybee.x<beehive1.x+beehive1.width and mybee.y+mybee.height>beehive1.y:
+    #     on_stop_at_beehive()
+    if mybee.rect.colliderect(flower1.rect):
         on_stop_at_flower()
-    if mybee.x<beehive1.x+beehive1.width and mybee.y+mybee.height>beehive1.y:
+    if mybee.rect.colliderect(beehive1.rect):
         on_stop_at_beehive()
+
 
 
 
