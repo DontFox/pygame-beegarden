@@ -1,65 +1,13 @@
 import pygame
-import sys, random
+from config import *
+from Objects import bee, flower, beehive
+from images import bg, beehive_image, bee_image_L, bee_image_R, flower_image
 
 pygame.init()
-
-#window size
-width_window = 807
-height_window = 454
 
 main_window = pygame.display.set_mode((width_window,height_window))
 pygame.display.set_caption('beegarden')
 clock=pygame.time.Clock()
-
-
-
-# load images
-#   Background
-bg = pygame.image.load('bg-green.jpg')
-#   bee,beehive,flower
-bee_image_R=pygame.image.load('bee_R.png')
-bee_image_L=pygame.image.load("bee_L.png")
-beehive_image=pygame.image.load('beehive.png')
-flower_image=pygame.image.load('flower.png')
-
-speed_honey=1
-
-
-# config bee
-class bee:
-    speed=3
-
-    honey=0
-    honey_max=100
-    left=False
-    right=False
-    def __init__(self,x,y):
-        self.x=x
-        self.y=y
-        self.width = 96
-        self.height = 82
-    def create_rect(self):
-        self.rect=pygame.Rect((self.x,self.y),(self.width,self.height))
-
-class flower:
-    def __init__(self,x,y,honey):
-        self.x=x
-        self.y=y
-        self.honey=honey
-        self.width = 100
-        self.height = 104
-        self.rect=pygame.Rect((self.x,self.y),(self.width,self.height))
-
-class beehive:
-    honey_max=200
-    def __init__(self,x,y,honey):
-        self.x=x
-        self.y=y
-        self.honey=honey
-        self.width = 150
-        self.height = 117
-        self.rect=pygame.Rect((self.x,self.y),(self.width,self.height))
-
 
 
 # Create Objects
@@ -93,8 +41,6 @@ limit_left=limit
 limit_right=width_window-mybee.width-limit
 
 
-
-i=1
 while 1:
     clock.tick(40)
 # [1/3]
