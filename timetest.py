@@ -10,7 +10,7 @@ minutes = 0
 seconds = 0
 milliseconds = 0
 
-cover = pygame.surface.Surface((160,40)).convert()
+cover = pygame.Surface((160,40)).convert()
 cover.fill((220, 220, 220))
 while True:
     for event in pygame.event.get():

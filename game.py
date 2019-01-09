@@ -8,7 +8,16 @@ pygame.init()
 main_window = pygame.display.set_mode((width_window, height_window))
 pygame.display.set_caption('beegarden')
 clock = pygame.time.Clock()
-stopwatch=pygame.time.Clock()
+
+#stopwatch_config
+stopwatch= pygame.time.Clock()
+myfont = pygame.font.SysFont("monospace", 25)
+minutes= 0
+seconds= 0
+milliseconds= 0
+stopwatch_surf = pygame.Surface((160, 40)).convert()
+stopwatch_surf.fill((220, 220, 0))
+
 
 # Create Objects (see Objects.py)
 #   bee (x,y)
@@ -53,7 +62,6 @@ while 1:
 # [2/3]
 
     keys = pygame.key.get_pressed()
-
     if keys[pygame.K_LEFT]:
         if mybee.x >= limit_left:
             mybee.x -= mybee.speed
@@ -78,10 +86,22 @@ while 1:
     if mybee.rect.colliderect(beehive1.rect):
         on_stop_at_beehive()
 
+    #stopwatch
+    if beehive1.honey != beehive1.honey_max:
+        if milliseconds > 1000:
+            seconds += 1
+            milliseconds -= 1000
+            main_window.blit(stopwatch_surf, (0, 0))
+        if seconds > 60:
+            minutes += 1
+            seconds -= 60
+        milliseconds += stopwatch.tick_busy_loop(60)
+        timelabel = myfont.render("{}:{}".format(minutes, seconds), True, (0,0,0))
 
 
 
-# [3/3]
+
+    # [3/3]
     main_window.blit(bg, (0, 0))
 
     main_window.blit(beehive_image, (beehive1.x, beehive1.y))
@@ -92,6 +112,9 @@ while 1:
         main_window.blit(bee_image_L, (mybee.x, mybee.y))
     else:
         main_window.blit(bee_image_R, (mybee.x, mybee.y))
+
+    main_window.blit(timelabel,(0, 0))
+
     pygame.display.update()
 
     print(mybee.honey, '  ', flower1.honey, '  ', beehive1.honey)
