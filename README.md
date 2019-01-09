@@ -2,8 +2,8 @@
 python, pygame
 
 plan:
-  -honey count
-  -time
+  -honey count(complete)
+  -time(complete)
   -score
-  -enemys
-  -change image(bee) to oversize
+  -enemies
+  -change images to oversize

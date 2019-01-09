@@ -11,12 +11,8 @@ clock = pygame.time.Clock()
 
 #stopwatch_config
 stopwatch= pygame.time.Clock()
-myfont = pygame.font.SysFont("monospace", 25)
-minutes= 0
-seconds= 0
-milliseconds= 0
+myfont = pygame.font.SysFont("monospace", 25,bold=True)
 stopwatch_surf = pygame.Surface((160, 40)).convert()
-stopwatch_surf.fill((220, 220, 0))
 
 
 # Create Objects (see Objects.py)
@@ -40,6 +36,11 @@ def on_stop_at_beehive():
         if beehive1.honey < beehive1.honey_max:
             mybee.honey -= speed_honey
             beehive1.honey += speed_honey
+
+
+#honeycount
+honeycount_surf=pygame.Surface((honeycount_width,honeycount_height)).convert()
+
 
 
 # limitsize (see config.py)
@@ -86,6 +87,11 @@ while 1:
     if mybee.rect.colliderect(beehive1.rect):
         on_stop_at_beehive()
 
+    #honeycount
+    honeycount_label = myfont.render('Bee:{} Beehive:{} Flower:{}'.format(mybee.honey,
+                                                                        beehive1.honey,
+                                                                        flower1.honey), True, (0, 0, 0))
+
     #stopwatch
     if beehive1.honey != beehive1.honey_max:
         if milliseconds > 1000:
@@ -96,7 +102,7 @@ while 1:
             minutes += 1
             seconds -= 60
         milliseconds += stopwatch.tick_busy_loop(60)
-        timelabel = myfont.render("{}:{}".format(minutes, seconds), True, (0,0,0))
+        timelabel = myfont.render("{}:{}".format(minutes, seconds), True, (0, 0, 0))
 
 
 
@@ -113,8 +119,9 @@ while 1:
     else:
         main_window.blit(bee_image_R, (mybee.x, mybee.y))
 
-    main_window.blit(timelabel,(0, 0))
-
+    main_window.blit(timelabel, (0, 0))
+    main_window.blit(honeycount_label, (width_window-honeycount_width, height_window-honeycount_height))
+    # main_window.blit(honeycount_surf,(width_window-honeycount_width,height_window-honeycount_height))
     pygame.display.update()
 
     print(mybee.honey, '  ', flower1.honey, '  ', beehive1.honey)
