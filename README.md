@@ -6,3 +6,4 @@ plan:
   -time
   -score
   -enemys
+  -change image(bee) to oversize
