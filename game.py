@@ -5,40 +5,39 @@ from images import bg, beehive_image, bee_image_L, bee_image_R, flower_image
 
 pygame.init()
 
-main_window = pygame.display.set_mode((width_window,height_window))
+main_window = pygame.display.set_mode((width_window, height_window))
 pygame.display.set_caption('beegarden')
-clock=pygame.time.Clock()
+clock = pygame.time.Clock()
 
 
-# Create Objects
+# Create Objects (see Objects.py)
 #   bee (x,y)
-mybee=bee(150,200)
+mybee = bee(150, 200)
 #   flower (x,y,honey)
-flower1=flower(580,100,200)
+flower1 = flower(580, 100, 200)
 #   beehives (x,y,honey)
-beehive1=beehive(50,300,0)
+beehive1 = beehive(50, 300,  0)
 
 
 
 
 def on_stop_at_flower():
-    if mybee.honey<100:
-        if flower1.honey>0:
-            flower1.honey-=speed_honey
+    if mybee.honey < 100:
+        if flower1.honey > 0:
+            flower1.honey -= speed_honey
             mybee.honey = mybee.honey + speed_honey
 def on_stop_at_beehive():
     if mybee.honey > 0:
-        if beehive1.honey<beehive1.honey_max:
-            mybee.honey-=speed_honey
-            beehive1.honey+=speed_honey
+        if beehive1.honey < beehive1.honey_max:
+            mybee.honey -= speed_honey
+            beehive1.honey += speed_honey
 
 
-# limitsize
-limit=8
-limit_down=height_window-mybee.height-limit
-limit_up=limit
-limit_left=limit
-limit_right=width_window-mybee.width-limit
+# limitsize (see config.py)
+limit_down = height_window-mybee.height-limit
+limit_up = limit
+limit_left = limit
+limit_right = width_window-mybee.width-limit
 
 
 while 1:
@@ -56,27 +55,24 @@ while 1:
     keys=pygame.key.get_pressed()
 
     if keys[pygame.K_LEFT]:
-        if mybee.x>=limit_left:
+        if mybee.x >= limit_left:
             mybee.x -= mybee.speed
             mybee.right = False
             mybee.left = True
     if keys[pygame.K_RIGHT]:
-        if mybee.x<=limit_right:
+        if mybee.x <= limit_right:
             mybee.x += mybee.speed
-            mybee.right=True
-            mybee.left=False
+            mybee.right = True
+            mybee.left = False
     if keys[pygame.K_UP]:
-        if mybee.y>=limit_up:
+        if mybee.y >= limit_up:
             mybee.y -= mybee.speed
     if keys[pygame.K_DOWN]:
-        if mybee.y<=limit_down:
+        if mybee.y <= limit_down:
             mybee.y += mybee.speed
 
+    # check the  overlap
     mybee.create_rect()
-    # if mybee.x+mybee.width>flower1.x and mybee.y<flower1.y+flower1.height:
-    #     on_stop_at_flower()
-    # if mybee.x<beehive1.x+beehive1.width and mybee.y+mybee.height>beehive1.y:
-    #     on_stop_at_beehive()
     if mybee.rect.colliderect(flower1.rect):
         on_stop_at_flower()
     if mybee.rect.colliderect(beehive1.rect):
@@ -88,7 +84,7 @@ while 1:
 # [3/3]
     main_window.blit(bg, (0, 0))
 
-    main_window.blit(beehive_image,(beehive1.x,beehive1.y))
+    main_window.blit(beehive_image(beehive1.x,beehive1.y))
     main_window.blit(flower_image, (flower1.x,flower1.y))
     if mybee.right:
         main_window.blit(bee_image_R, (mybee.x,mybee.y))
@@ -98,7 +94,7 @@ while 1:
         main_window.blit(bee_image_R, (mybee.x, mybee.y))
     pygame.display.update()
 
-    print(mybee.honey,'  ',flower1.honey,'  ',beehive1.honey)
+    print(mybee.honey, '  ', flower1.honey, '  ', beehive1.honey)
 
 
 
