@@ -8,7 +8,7 @@ pygame.init()
 main_window = pygame.display.set_mode((width_window, height_window))
 pygame.display.set_caption('beegarden')
 clock = pygame.time.Clock()
-
+stopwatch=pygame.time.Clock()
 
 # Create Objects (see Objects.py)
 #   bee (x,y)
@@ -52,7 +52,7 @@ while 1:
 
 # [2/3]
 
-    keys=pygame.key.get_pressed()
+    keys = pygame.key.get_pressed()
 
     if keys[pygame.K_LEFT]:
         if mybee.x >= limit_left:
@@ -84,10 +84,10 @@ while 1:
 # [3/3]
     main_window.blit(bg, (0, 0))
 
-    main_window.blit(beehive_image(beehive1.x,beehive1.y))
-    main_window.blit(flower_image, (flower1.x,flower1.y))
+    main_window.blit(beehive_image, (beehive1.x, beehive1.y))
+    main_window.blit(flower_image, (flower1.x, flower1.y))
     if mybee.right:
-        main_window.blit(bee_image_R, (mybee.x,mybee.y))
+        main_window.blit(bee_image_R, (mybee.x, mybee.y))
     elif mybee.left:
         main_window.blit(bee_image_L, (mybee.x, mybee.y))
     else:
