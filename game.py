@@ -6,7 +6,7 @@ from images import bg, beehive_image, bee_image_L, bee_image_R, flower_image
 pygame.init()
 
 main_window = pygame.display.set_mode((width_window, height_window))
-pygame.display.set_caption('beegarden')
+pygame.display.set_caption('bee-haney')
 clock = pygame.time.Clock()
 
 #stopwatch_config
