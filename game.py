@@ -1,6 +1,6 @@
-import pygame
+import pygame, random
 from config import *
-from Objects import bee, flower, beehive
+from Objects import bee, flower, beehive, enemy
 from images import bg, beehive_image, bee_image_L, bee_image_R, flower_image
 
 pygame.init()
@@ -22,6 +22,8 @@ mybee = bee(150, 200)
 flower1 = flower(580, 100, 200)
 #   beehives (x,y,honey)
 beehive1 = beehive(50, 300,  0)
+#   falling enemy
+enemy1 = enemy(random.randint(0 + limit, width_window - limit), 0)
 
 
 
@@ -38,7 +40,7 @@ def on_stop_at_beehive():
             beehive1.honey += speed_honey
 
 
-#honeycount
+#honeycount (see config.py)
 honeycount_surf=pygame.Surface((honeycount_width,honeycount_height)).convert()
 
 
@@ -68,17 +70,21 @@ while 1:
             mybee.x -= mybee.speed
             mybee.right = False
             mybee.left = True
+            mybee.first_touch=True
     if keys[pygame.K_RIGHT]:
         if mybee.x <= limit_right:
             mybee.x += mybee.speed
             mybee.right = True
             mybee.left = False
+            mybee.first_touch=True
     if keys[pygame.K_UP]:
         if mybee.y >= limit_up:
             mybee.y -= mybee.speed
+            mybee.first_touch=True
     if keys[pygame.K_DOWN]:
         if mybee.y <= limit_down:
             mybee.y += mybee.speed
+            mybee.first_touch = True
 
     # check the  overlap
     mybee.create_rect()
@@ -93,18 +99,24 @@ while 1:
                                                                         flower1.honey), True, (0, 0, 0))
 
     #stopwatch
-    if beehive1.honey != beehive1.honey_max:
-        if milliseconds > 1000:
-            seconds += 1
-            milliseconds -= 1000
-            main_window.blit(stopwatch_surf, (0, 0))
-        if seconds > 60:
-            minutes += 1
-            seconds -= 60
-        milliseconds += stopwatch.tick_busy_loop(60)
-        timelabel = myfont.render("{}:{}".format(minutes, seconds), True, (0, 0, 0))
+    if mybee.first_touch:
+        if beehive1.honey != beehive1.honey_max:
+            if milliseconds > 1000:
+                seconds += 1
+                milliseconds -= 1000
+                main_window.blit(stopwatch_surf, (0, 0))
+            if seconds > 60:
+                minutes += 1
+                seconds -= 60
+            milliseconds += stopwatch.tick_busy_loop(60)
+    timelabel = myfont.render("{}:{}".format(minutes, seconds), True, (0, 0, 0))
 
-
+    #enemies
+    if enemy1.y>height_window:
+        enemy1 = enemy(random.randint(0 + limit, width_window - limit), 0)
+    if seconds >= 3:
+        enemy1.y += enemy1.speed
+        enemy1.create_rect()
 
 
     # [3/3]
@@ -116,16 +128,14 @@ while 1:
         main_window.blit(bee_image_R, (mybee.x, mybee.y))
     elif mybee.left:
         main_window.blit(bee_image_L, (mybee.x, mybee.y))
-    else:
-        main_window.blit(bee_image_R, (mybee.x, mybee.y))
 
     main_window.blit(timelabel, (0, 0))
     main_window.blit(honeycount_label, (width_window-honeycount_width, height_window-honeycount_height))
     # main_window.blit(honeycount_surf,(width_window-honeycount_width,height_window-honeycount_height))
+
     pygame.display.update()
 
-    print(mybee.honey, '  ', flower1.honey, '  ', beehive1.honey)
-
+    print(enemy1.y)
 
 
 

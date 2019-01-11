@@ -1,12 +1,14 @@
 import pygame
 
+
 class bee:
     speed=3
 
     honey=0
     honey_max=100
     left=False
-    right=False
+    right=True
+    first_touch=False
     def __init__(self,x,y):
         self.x=x
         self.y=y
@@ -32,4 +34,14 @@ class beehive:
         self.honey=honey
         self.width = 150
         self.height = 117
+        self.rect=pygame.Rect((self.x,self.y),(self.width,self.height))
+class enemy:
+    speed=2
+    def __init__(self,x,y):
+        self.x=x
+        self.y=y
+        self.width = 150
+        self.height = 117
+        self.rect=pygame.Rect((self.x,self.y),(self.width,self.height))
+    def create_rect(self):
         self.rect=pygame.Rect((self.x,self.y),(self.width,self.height))

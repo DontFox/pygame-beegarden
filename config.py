@@ -7,7 +7,6 @@ height_window = 454
 speed_honey=1
 # границы окна
 limit = 8
-
 #honeycount
 honeycount_width=450
 honeycount_height=32
