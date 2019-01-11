@@ -1,7 +1,8 @@
 import pygame, random
+import pygameMenu
 from config import *
 from Objects import bee, flower, beehive, enemy
-from images import bg, beehive_image, bee_image_L, bee_image_R, flower_image
+from images import bg, beehive_image, bee_image_L, bee_image_R, flower_image,enemy_image
 
 pygame.init()
 
@@ -19,11 +20,14 @@ stopwatch_surf = pygame.Surface((160, 40)).convert()
 #   bee (x,y)
 mybee = bee(bee_start_point_x, bee_start_point_y)
 #   flower (x,y,honey)
-flower1 = flower(580, 100, 200)
+flower1 = flower(580, 100, 150)
 #   beehives (x,y,honey)
-beehive1 = beehive(50, 300,  0)
+beehive1 = beehive(50, 300,  0, flower1.honey)
 #   falling enemy
 enemy1 = enemy(random.randint(0 + limit, width_window - limit), 0)
+enemy2 = enemy(random.randint(0 + limit, width_window - limit), 0)
+enemy3 = enemy(random.randint(0 + limit, width_window - limit), 0)
+enemy4 = enemy(random.randint(0 + limit, width_window - limit), 0)
 
 
 
@@ -59,12 +63,30 @@ def restart():
     milliseconds = 0
     mybee.restart(bee_start_point_x,bee_start_point_y)
     flower1.restart(honey_flower)
-    beehive1.restart(0)
-    enemy1.restart()
+    beehive1.restart(0,flower1.honey)
+    enemy1.restart(random.randint(0 + limit, width_window - limit), 0)
+    enemy2.restart(random.randint(0 + limit, width_window - limit), 0)
+    enemy3.restart(random.randint(0 + limit, width_window - limit), 0)
+    enemy4.restart(random.randint(0 + limit, width_window - limit), 0)
+
+def enemy_create(enemy):
+    enemy.create = True
+    enemy.create_rect()
+    if enemy.create:
+        if enemy.rect2.colliderect(enemy.rect2):
+            enemy = enemy(random.randint(0 + limit, width_window - limit - enemy.width), 0)
+    # if enemy3.rect2.colliderect(enemy1.rect2) or enemy3.rect2.colliderect(enemy2.rect2) or enemy3.rect2.colliderect(enemy4.rect2):
+    #     enemy3 = enemy(random.randint(0 + limit, width_window - limit - enemy3.width), 0)
+    if enemy.rect2.colliderect(enemy1.rect2) or enemy.rect2.colliderect(enemy.rect2):
+        enemy = enemy(random.randint(0 + limit, width_window - limit-enemy.width), 0)
+    enemy.y += enemy.speed
+    if mybee.rect.colliderect(enemy.rect):
+        restart()
+
 
 while 1:
     clock.tick(40)
-# [1/3]
+    # [1/3]
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             exit()
@@ -72,7 +94,7 @@ while 1:
 
 
 
-# [2/3]
+            # [2/3]
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:
@@ -105,11 +127,13 @@ while 1:
 
     #honeycount
     honeycount_label = myfont.render('Bee:{} Beehive:{} Flower:{}'.format(mybee.honey,
-                                                                        beehive1.honey,
-                                                                        flower1.honey), True, (0, 0, 0))
+                                                                          beehive1.honey,
+                                                                          flower1.honey), True, (0, 0, 0))
 
     #stopwatch
     if mybee.first_touch:
+        if minutes == 0 and seconds == 0:
+            stopwatch = pygame.time.Clock()
         if beehive1.honey != beehive1.honey_max:
             if milliseconds > 1000:
                 seconds += 1
@@ -122,32 +146,98 @@ while 1:
     timelabel = myfont.render("{}:{}".format(minutes, seconds), True, (0, 0, 0))
 
     #enemies
-    if enemy1.y>height_window:
-        enemy1 = enemy(random.randint(0 + limit, width_window - limit), 0)
-    if seconds >= 3:
-        enemy1.y += enemy1.speed
-        enemy1.create_rect()
+    if beehive1.honey != beehive1.honey_max:
+        #enemy1
+        if mybee.first_touch:
+            enemy1.create = True
+            if enemy1.y>height_window:
+                enemy1 = enemy(random.randint(0 + limit, width_window - limit-enemy1.width), 0)
+            enemy1.y += enemy1.speed
+            if mybee.rect.colliderect(enemy1.rect):
+                restart()
+            enemy1.create_rect()
+        #enemy 2
+        if seconds >= 10 or minutes>=1:
+            enemy2.create = True
+            # if enemy1.create:
+            #     if enemy2.rect2.colliderect(enemy1.rect2):
+            #         enemy2 = enemy(random.randint(0 + limit, width_window - limit - enemy2.width), 0)
+            # if enemy3.create:
+            #     if enemy2.rect2.colliderect(enemy3.rect2):
+            #         enemy2 = enemy(random.randint(0 + limit, width_window - limit - enemy2.width), 0)
+            # if enemy4.create:
+            #     if enemy2.rect2.colliderect(enemy4.rect2):
+            #         enemy2 = enemy(random.randint(0 + limit, width_window - limit - enemy2.width), 0)
+            # # if enemy2.rect2.colliderect(enemy1.rect2) or enemy2.rect2.colliderect(enemy3.rect2) or enemy2.rect2.colliderect(enemy4.rect2):
+            # #     enemy2 = enemy(random.randint(0 + limit, width_window - limit - enemy2.width), 0)
+            if enemy2.y>height_window:
+                enemy2 = enemy(random.randint(0 + limit, width_window - limit-enemy2.width), 0)
+            enemy2.y += enemy2.speed
+            if mybee.rect.colliderect(enemy2.rect):
+                restart()
+            enemy2.create_rect()
+        #enemy3
+        if seconds >= 20 or minutes>=1:
+            enemy3.create = True
+            # if enemy1.create:
+            #     if enemy3.rect2.colliderect(enemy1.rect2):
+            #         enemy3 = enemy(random.randint(0 + limit, width_window - limit - enemy3.width), 0)
+            # if enemy2.create:
+            #     if enemy3.rect2.colliderect(enemy2.rect2):
+            #         enemy3 = enemy(random.randint(0 + limit, width_window - limit - enemy3.width), 0)
+            # if enemy4.create:
+            #     if enemy3.rect2.colliderect(enemy4.rect2):
+            #         enemy3 = enemy(random.randint(0 + limit, width_window - limit - enemy3.width), 0)
+            # # if enemy3.rect2.colliderect(enemy1.rect2) or enemy3.rect2.colliderect(enemy2.rect2) or enemy3.rect2.colliderect(enemy4.rect2):
+            # #     enemy3 = enemy(random.randint(0 + limit, width_window - limit - enemy3.width), 0)
+            if enemy3.y>height_window:
+                enemy3 = enemy(random.randint(0 + limit, width_window - limit-enemy3.width), 0)
+            enemy3.y += enemy3.speed
+            if mybee.rect.colliderect(enemy3.rect):
+                restart()
+            enemy3.create_rect()
+        #enemy4
+        if minutes >= 1:
+            enemy4.create = True
+            # if enemy4.rect2.colliderect(enemy1.rect2) or enemy4.rect2.colliderect(enemy2.rect2) or enemy4.rect2.colliderect(enemy3.rect2):
+            #     enemy4 = enemy(random.randint(0 + limit, width_window - limit - enemy4.width), 0)
+            if enemy4.y>height_window:
+                enemy4 = enemy(random.randint(0 + limit, width_window - limit-enemy4.width), 0)
+            enemy4.y += enemy4.speed
+            if mybee.rect.colliderect(enemy4.rect):
+                restart()
+            enemy4.create_rect()
+    else:
+        enemy1.create = False
+        enemy2.create = False
+        enemy3.create = False
+        enemy4.create = False
 
-    if seconds==10:
-        restart()
 
     # [3/3]
     main_window.blit(bg, (0, 0))
 
     main_window.blit(beehive_image, (beehive1.x, beehive1.y))
     main_window.blit(flower_image, (flower1.x, flower1.y))
+
     if mybee.right:
         main_window.blit(bee_image_R, (mybee.x, mybee.y))
     elif mybee.left:
         main_window.blit(bee_image_L, (mybee.x, mybee.y))
+    if enemy1.create:
+        main_window.blit(enemy_image, (enemy1.x, enemy1.y))
+    if enemy2.create:
+        main_window.blit(enemy_image, (enemy2.x, enemy2.y))
+    if enemy3.create:
+        main_window.blit(enemy_image, (enemy3.x, enemy3.y))
+    if enemy4.create:
+        main_window.blit(enemy_image, (enemy4.x, enemy4.y))
 
     main_window.blit(timelabel, (0, 0))
     main_window.blit(honeycount_label, (width_window-honeycount_width, height_window-honeycount_height))
     # main_window.blit(honeycount_surf,(width_window-honeycount_width,height_window-honeycount_height))
 
     pygame.display.update()
-
-    print(enemy1.y)
 
 
 

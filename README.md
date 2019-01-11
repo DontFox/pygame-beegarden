@@ -7,3 +7,4 @@ plan:
   -score
   -enemies
   -change images to oversize
+  -common function for enemies
