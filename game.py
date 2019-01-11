@@ -69,23 +69,9 @@ def restart():
     enemy3.restart(random.randint(0 + limit, width_window - limit), 0)
     enemy4.restart(random.randint(0 + limit, width_window - limit), 0)
 
-def enemy_create(enemy):
-    enemy.create = True
-    enemy.create_rect()
-    if enemy.create:
-        if enemy.rect2.colliderect(enemy.rect2):
-            enemy = enemy(random.randint(0 + limit, width_window - limit - enemy.width), 0)
-    # if enemy3.rect2.colliderect(enemy1.rect2) or enemy3.rect2.colliderect(enemy2.rect2) or enemy3.rect2.colliderect(enemy4.rect2):
-    #     enemy3 = enemy(random.randint(0 + limit, width_window - limit - enemy3.width), 0)
-    if enemy.rect2.colliderect(enemy1.rect2) or enemy.rect2.colliderect(enemy.rect2):
-        enemy = enemy(random.randint(0 + limit, width_window - limit-enemy.width), 0)
-    enemy.y += enemy.speed
-    if mybee.rect.colliderect(enemy.rect):
-        restart()
-
 
 while 1:
-    clock.tick(40)
+    clock.tick(60)
     # [1/3]
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
