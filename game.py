@@ -17,7 +17,7 @@ stopwatch_surf = pygame.Surface((160, 40)).convert()
 
 # Create Objects (see Objects.py)
 #   bee (x,y)
-mybee = bee(150, 200)
+mybee = bee(bee_start_point_x, bee_start_point_y)
 #   flower (x,y,honey)
 flower1 = flower(580, 100, 200)
 #   beehives (x,y,honey)
@@ -51,6 +51,16 @@ limit_up = limit
 limit_left = limit
 limit_right = width_window-mybee.width-limit
 
+def restart():
+    global stopwatch, minutes, seconds, milliseconds
+    stopwatch = pygame.time.Clock()
+    minutes = 0
+    seconds = 0
+    milliseconds = 0
+    mybee.restart(bee_start_point_x,bee_start_point_y)
+    flower1.restart(honey_flower)
+    beehive1.restart(0)
+    enemy1.restart()
 
 while 1:
     clock.tick(40)
@@ -118,6 +128,8 @@ while 1:
         enemy1.y += enemy1.speed
         enemy1.create_rect()
 
+    if seconds==10:
+        restart()
 
     # [3/3]
     main_window.blit(bg, (0, 0))
