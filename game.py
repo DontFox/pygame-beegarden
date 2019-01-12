@@ -14,7 +14,8 @@ from images import bg, beehive_image, bee_image_L, bee_image_R, flower_image,ene
 
 pygame.init()
 
-main_window = pygame.display.set_mode((width_window, height_window))
+main_window = pygame.display.set_mode((width_window,
+                                       height_window))
 pygame.display.set_caption('bee-haney')
 clock = pygame.time.Clock()
 
@@ -34,10 +35,17 @@ stopwatch_surf = pygame.Surface((160, 40)).convert()
 mybee = bee(bee_start_point_x, bee_start_point_y)
 
 #   flower (x,y,honey)
-flower1 = flower(width_window-300, 150, honey_flower)
+flower1 = flower(width_window-300,
+                 150,
+                 honey_flower
+                 )
 
 #   beehives (x,y,honey)
-beehive1 = beehive(75, height_window-50-117,  0, flower1.honey)
+beehive1 = beehive(75,
+                   height_window-50-117,
+                   0,
+                   flower1.honey
+                   )
 
 #   falling enemy
 enemy1 = enemy(random.randint(0 + limit, width_window - limit), 0)
@@ -90,6 +98,7 @@ def restart():
     enemy2.restart(random.randint(0 + limit, width_window - limit), 0)
     enemy3.restart(random.randint(0 + limit, width_window - limit), 0)
     enemy4.restart(random.randint(0 + limit, width_window - limit), 0)
+
 
 def falling_enemy():
 
@@ -162,6 +171,7 @@ def falling_enemy():
         enemy3.create = False
         enemy4.create = False
 
+
 def maingame():
 
     global  honeycount_label
@@ -216,7 +226,11 @@ def maingame():
                 minutes += 1
                 seconds -= 60
             milliseconds += stopwatch.tick_busy_loop(60)
-    timelabel = myfont.render("{}:{}".format(minutes, seconds), True, (0, 0, 0))
+
+    timelabel = myfont.render("{}:{}".format(minutes, seconds),
+                              True,
+                              (0, 0, 0)
+                              )
 
     # enemies
     falling_enemy()
@@ -228,7 +242,7 @@ def draw_window():
     main_window.blit(flower_image, (flower1.x, flower1.y))
 
     if mybee.right:
-        main_window.blit(bee_image_R, (mybee.x, mybee.y))
+        main_window.blit(bee_image_R,(mybee.x, mybee.y))
     elif mybee.left:
         main_window.blit(bee_image_L, (mybee.x, mybee.y))
     if enemy1.create:
