@@ -1,5 +1,6 @@
 import pygame, random
 from pygame.locals import *
+import sys
 
 import pygameMenu
 from pygameMenu.locals import *
@@ -24,7 +25,7 @@ clock = pygame.time.Clock()
 # stopwatch_config
 
 stopwatch= pygame.time.Clock()
-myfont = pygame.font.SysFont("monospace", 25,bold=True)
+myfont = pygame.font.SysFont("monospace", 25, bold=True)
 stopwatch_surf = pygame.Surface((160, 40)).convert()
 
 # -----------------------------------------------------------------------------
@@ -173,7 +174,17 @@ def falling_enemy():
 
 
 def maingame():
+    while 1:
+        playevents = pygame.event.get()
+        for e in playevents:
+            if e.type == QUIT:
+                exit()
+            elif e.type == KEYDOWN:
+                if e.key == K_ESCAPE:
+                    main_menu.enable()
 
+                    return
+        main_menu.mainloop(playevents)
     global  honeycount_label
     global timelabel
     global minutes, seconds
@@ -235,7 +246,7 @@ def maingame():
     # enemies
     falling_enemy()
 
-def draw_window():
+# def draw_window():
     main_window.blit(bg, (0, 0))
 
     main_window.blit(beehive_image, (beehive1.x, beehive1.y))
@@ -257,12 +268,14 @@ def draw_window():
     main_window.blit(timelabel, (0, 0))
     main_window.blit(honeycount_label, (width_window - honeycount_width, height_window - honeycount_height))
 
+def play():
+    None
+
 # defs for Menu
 
 def mainmenu_background():
 
     main_window.fill((40, 0, 40))
-
 # -----------------------------------------------------------------------------
 
 # MainMenu
@@ -275,19 +288,26 @@ main_menu = pygameMenu.Menu(main_window,
                             bgfun=mainmenu_background,
                             menu_color_title=(0, 0, 0),
                             enabled = True,
-                            menu_alpha = 90
+                            menu_alpha = 90,
+                            onclose=PYGAME_MENU_DISABLE_CLOSE,
+                            option_shadow=False
                             )
+
+main_menu.add_option('Play', maingame)
+main_menu.add_option(element_name='Exit',
+                     element=PYGAME_MENU_EXIT)
 
 
 
 # -----------------------------------------------------------------------------
 
 
+
+
 while 1:
 
-    # [1/3]
-
     clock.tick(60)
+
     events = pygame.event.get()
     for event in events:
         if event.type == pygame.QUIT:
@@ -296,21 +316,6 @@ while 1:
             if event.key == K_ESCAPE:
                 main_menu.enable()
 
-
-
-
-    # [2/3]
-
-    maingame()
-
-
-
-    # [3/3]
-
-    draw_window()
+    main_menu.mainloop(events)
 
     pygame.display.flip()
-
-
-
-pygame.quit()
