@@ -54,7 +54,7 @@ class beehive:
 
 
 class enemy:
-    speed = 3
+    speed = 4
     create = False
 
     def __init__(self, x, y):

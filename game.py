@@ -34,10 +34,10 @@ stopwatch_surf = pygame.Surface((160, 40)).convert()
 mybee = bee(bee_start_point_x, bee_start_point_y)
 
 #   flower (x,y,honey)
-flower1 = flower(580, 100, honey_flower)
+flower1 = flower(width_window-300, 150, honey_flower)
 
 #   beehives (x,y,honey)
-beehive1 = beehive(50, 300,  0, flower1.honey)
+beehive1 = beehive(75, height_window-50-117,  0, flower1.honey)
 
 #   falling enemy
 enemy1 = enemy(random.randint(0 + limit, width_window - limit), 0)
@@ -162,6 +162,87 @@ def falling_enemy():
         enemy3.create = False
         enemy4.create = False
 
+def maingame():
+
+    global  honeycount_label
+    global timelabel
+    global minutes, seconds
+    global milliseconds, stopwatch
+
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_LEFT]:
+        if mybee.x >= limit_left:
+            mybee.x -= mybee.speed
+            mybee.right = False
+            mybee.left = True
+            mybee.first_touch = True
+    if keys[pygame.K_RIGHT]:
+        if mybee.x <= limit_right:
+            mybee.x += mybee.speed
+            mybee.right = True
+            mybee.left = False
+            mybee.first_touch = True
+    if keys[pygame.K_UP]:
+        if mybee.y >= limit_up:
+            mybee.y -= mybee.speed
+            mybee.first_touch = True
+    if keys[pygame.K_DOWN]:
+        if mybee.y <= limit_down:
+            mybee.y += mybee.speed
+            mybee.first_touch = True
+
+    # check the  overlap
+    mybee.create_rect()
+    if mybee.rect.colliderect(flower1.rect):
+        on_stop_at_flower()
+    if mybee.rect.colliderect(beehive1.rect):
+        on_stop_at_beehive()
+
+    # honeycount
+    honeycount_label = myfont.render('Bee:{} Beehive:{} Flower:{}'.format(mybee.honey,
+                                                                          beehive1.honey,
+                                                                          flower1.honey), True, (0, 0, 0))
+
+    # stopwatch
+    if mybee.first_touch:
+        if minutes == 0 and seconds == 0:
+            stopwatch = pygame.time.Clock()
+        if beehive1.honey != beehive1.honey_max:
+            if milliseconds > 1000:
+                seconds += 1
+                milliseconds -= 1000
+                main_window.blit(stopwatch_surf, (0, 0))
+            if seconds > 60:
+                minutes += 1
+                seconds -= 60
+            milliseconds += stopwatch.tick_busy_loop(60)
+    timelabel = myfont.render("{}:{}".format(minutes, seconds), True, (0, 0, 0))
+
+    # enemies
+    falling_enemy()
+
+def draw_window():
+    main_window.blit(bg, (0, 0))
+
+    main_window.blit(beehive_image, (beehive1.x, beehive1.y))
+    main_window.blit(flower_image, (flower1.x, flower1.y))
+
+    if mybee.right:
+        main_window.blit(bee_image_R, (mybee.x, mybee.y))
+    elif mybee.left:
+        main_window.blit(bee_image_L, (mybee.x, mybee.y))
+    if enemy1.create:
+        main_window.blit(enemy_image, (enemy1.x, enemy1.y))
+    if enemy2.create:
+        main_window.blit(enemy_image, (enemy2.x, enemy2.y))
+    if enemy3.create:
+        main_window.blit(enemy_image, (enemy3.x, enemy3.y))
+    if enemy4.create:
+        main_window.blit(enemy_image, (enemy4.x, enemy4.y))
+
+    main_window.blit(timelabel, (0, 0))
+    main_window.blit(honeycount_label, (width_window - honeycount_width, height_window - honeycount_height))
+
 # defs for Menu
 
 def mainmenu_background():
@@ -197,87 +278,22 @@ while 1:
     for event in events:
         if event.type == pygame.QUIT:
             exit()
+        elif event.type == KEYDOWN:
+            if event.key == K_ESCAPE:
+                main_menu.enable()
 
 
 
 
-            # [2/3]
+    # [2/3]
 
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_LEFT]:
-        if mybee.x >= limit_left:
-            mybee.x -= mybee.speed
-            mybee.right = False
-            mybee.left = True
-            mybee.first_touch=True
-    if keys[pygame.K_RIGHT]:
-        if mybee.x <= limit_right:
-            mybee.x += mybee.speed
-            mybee.right = True
-            mybee.left = False
-            mybee.first_touch=True
-    if keys[pygame.K_UP]:
-        if mybee.y >= limit_up:
-            mybee.y -= mybee.speed
-            mybee.first_touch=True
-    if keys[pygame.K_DOWN]:
-        if mybee.y <= limit_down:
-            mybee.y += mybee.speed
-            mybee.first_touch = True
+    maingame()
 
-    # check the  overlap
-    mybee.create_rect()
-    if mybee.rect.colliderect(flower1.rect):
-        on_stop_at_flower()
-    if mybee.rect.colliderect(beehive1.rect):
-        on_stop_at_beehive()
-
-    # honeycount
-    honeycount_label = myfont.render('Bee:{} Beehive:{} Flower:{}'.format(mybee.honey,
-                                                                          beehive1.honey,
-                                                                          flower1.honey), True, (0, 0, 0))
-
-    #stopwatch
-    if mybee.first_touch:
-        if minutes == 0 and seconds == 0:
-            stopwatch = pygame.time.Clock()
-        if beehive1.honey != beehive1.honey_max:
-            if milliseconds > 1000:
-                seconds += 1
-                milliseconds -= 1000
-                main_window.blit(stopwatch_surf, (0, 0))
-            if seconds > 60:
-                minutes += 1
-                seconds -= 60
-            milliseconds += stopwatch.tick_busy_loop(60)
-    timelabel = myfont.render("{}:{}".format(minutes, seconds), True, (0, 0, 0))
-
-    # enemies
-    falling_enemy()
 
 
     # [3/3]
-    main_window.blit(bg, (0, 0))
 
-    main_window.blit(beehive_image, (beehive1.x, beehive1.y))
-    main_window.blit(flower_image, (flower1.x, flower1.y))
-
-    if mybee.right:
-        main_window.blit(bee_image_R, (mybee.x, mybee.y))
-    elif mybee.left:
-        main_window.blit(bee_image_L, (mybee.x, mybee.y))
-    if enemy1.create:
-        main_window.blit(enemy_image, (enemy1.x, enemy1.y))
-    if enemy2.create:
-        main_window.blit(enemy_image, (enemy2.x, enemy2.y))
-    if enemy3.create:
-        main_window.blit(enemy_image, (enemy3.x, enemy3.y))
-    if enemy4.create:
-        main_window.blit(enemy_image, (enemy4.x, enemy4.y))
-
-    main_window.blit(timelabel, (0, 0))
-    main_window.blit(honeycount_label, (width_window-honeycount_width, height_window-honeycount_height))
-    # main_window.blit(honeycount_surf,(width_window-honeycount_width,height_window-honeycount_height))
+    draw_window()
 
     pygame.display.flip()
 
