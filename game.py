@@ -20,6 +20,9 @@ main_window = pygame.display.set_mode((width_window,
 pygame.display.set_caption('bee-haney')
 clock = pygame.time.Clock()
 
+
+DIFFICULTY = ['EASY']
+
 # -----------------------------------------------------------------------------
 
 # stopwatch_config
@@ -58,7 +61,7 @@ enemy4 = enemy(random.randint(0 + limit, width_window - limit), 0)
 
 # honeycount (see config.py)
 
-honeycount_surf=pygame.Surface((honeycount_width,honeycount_height)).convert()
+honeycount_surf=pygame.Surface((honeycount_width, honeycount_height)).convert()
 
 # -----------------------------------------------------------------------------
 
@@ -173,7 +176,7 @@ def falling_enemy():
         enemy4.create = False
 
 
-def maingame():
+def maingame(difficulty):
     global  honeycount_label
     global timelabel
     global minutes, seconds
@@ -181,6 +184,19 @@ def maingame():
     global clock
 
     restart()
+
+
+    difficulty = difficulty[0]
+    assert isinstance(difficulty, str)
+
+    if difficulty == 'EASY':
+        None
+    elif difficulty == 'MEDIUM':
+        None
+    elif difficulty == 'HARD':
+        None
+    else:
+        raise Exception('Unknown difficulty {0}'.format(difficulty))
 
     main_menu.disable()
     main_menu.reset(1)
@@ -301,7 +317,7 @@ main_menu = pygameMenu.Menu(main_window,
                             option_shadow=False
                             )
 
-main_menu.add_option('Play', maingame)
+main_menu.add_option('Play', maingame, DIFFICULTY)
 main_menu.add_option(element_name='Exit',
                      element=PYGAME_MENU_EXIT)
 
