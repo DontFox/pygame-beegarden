@@ -109,66 +109,58 @@ def falling_enemy():
     global enemy1, enemy2, enemy3, enemy4
 
     if beehive1.honey != beehive1.honey_max:
+
         #enemy1
-        if mybee.first_touch:
+
+        if enemy1.create and mybee.first_touch:
             enemy1.create = True
+
             if enemy1.y>height_window:
                 enemy1 = enemy(random.randint(0 + limit, width_window - limit-enemy1.width), 0)
             enemy1.y += enemy1.speed
             if mybee.rect.colliderect(enemy1.rect):
                 restart()
             enemy1.create_rect()
+
         #enemy 2
-        if seconds >= 10 or minutes>=1:
+
+        if enemy2.create and mybee.first_touch:
+            enemy1.create = True
             enemy2.create = True
-            # if enemy1.create:
-            #     if enemy2.rect2.colliderect(enemy1.rect2):
-            #         enemy2 = enemy(random.randint(0 + limit, width_window - limit - enemy2.width), 0)
-            # if enemy3.create:
-            #     if enemy2.rect2.colliderect(enemy3.rect2):
-            #         enemy2 = enemy(random.randint(0 + limit, width_window - limit - enemy2.width), 0)
-            # if enemy4.create:
-            #     if enemy2.rect2.colliderect(enemy4.rect2):
-            #         enemy2 = enemy(random.randint(0 + limit, width_window - limit - enemy2.width), 0)
-            # # if enemy2.rect2.colliderect(enemy1.rect2) or enemy2.rect2.colliderect(enemy3.rect2) or enemy2.rect2.colliderect(enemy4.rect2):
-            # #     enemy2 = enemy(random.randint(0 + limit, width_window - limit - enemy2.width), 0)
+
             if enemy2.y>height_window:
                 enemy2 = enemy(random.randint(0 + limit, width_window - limit-enemy2.width), 0)
             enemy2.y += enemy2.speed
             if mybee.rect.colliderect(enemy2.rect):
                 restart()
             enemy2.create_rect()
+
         #enemy3
-        if seconds >= 20 or minutes>=1:
+        if enemy3.create and mybee.first_touch:
+            enemy1.create = True
+            enemy2.create = True
             enemy3.create = True
-            # if enemy1.create:
-            #     if enemy3.rect2.colliderect(enemy1.rect2):
-            #         enemy3 = enemy(random.randint(0 + limit, width_window - limit - enemy3.width), 0)
-            # if enemy2.create:
-            #     if enemy3.rect2.colliderect(enemy2.rect2):
-            #         enemy3 = enemy(random.randint(0 + limit, width_window - limit - enemy3.width), 0)
-            # if enemy4.create:
-            #     if enemy3.rect2.colliderect(enemy4.rect2):
-            #         enemy3 = enemy(random.randint(0 + limit, width_window - limit - enemy3.width), 0)
-            # # if enemy3.rect2.colliderect(enemy1.rect2) or enemy3.rect2.colliderect(enemy2.rect2) or enemy3.rect2.colliderect(enemy4.rect2):
-            # #     enemy3 = enemy(random.randint(0 + limit, width_window - limit - enemy3.width), 0)
+
             if enemy3.y>height_window:
                 enemy3 = enemy(random.randint(0 + limit, width_window - limit-enemy3.width), 0)
             enemy3.y += enemy3.speed
             if mybee.rect.colliderect(enemy3.rect):
                 restart()
             enemy3.create_rect()
+
         #enemy4
-        if minutes >= 1:
+        if enemy4.create and mybee.first_touch:
+            enemy1.create = True
+            enemy2.create = True
+            enemy3.create = True
             enemy4.create = True
-            # if enemy4.rect2.colliderect(enemy1.rect2) or enemy4.rect2.colliderect(enemy2.rect2) or enemy4.rect2.colliderect(enemy3.rect2):
-            #     enemy4 = enemy(random.randint(0 + limit, width_window - limit - enemy4.width), 0)
             if enemy4.y>height_window:
                 enemy4 = enemy(random.randint(0 + limit, width_window - limit-enemy4.width), 0)
             enemy4.y += enemy4.speed
             if mybee.rect.colliderect(enemy4.rect):
                 restart()
             enemy4.create_rect()
+
     else:
         enemy1.create = False
         enemy2.create = False
@@ -182,21 +174,25 @@ def maingame(difficulty):
     global minutes, seconds
     global milliseconds, stopwatch
     global clock
-
-    restart()
+    global enemy1,enemy2,enemy3,enemy4
 
 
     difficulty = difficulty[0]
-    assert isinstance(difficulty, str)
 
     if difficulty == 'EASY':
-        None
+        enemy1.create = True
     elif difficulty == 'MEDIUM':
-        None
+        enemy1.create = True
+        enemy2.create = True
     elif difficulty == 'HARD':
-        None
-    else:
-        raise Exception('Unknown difficulty {0}'.format(difficulty))
+        enemy1.create = True
+        enemy2.create = True
+        enemy3.create = True
+    elif difficulty == "VERY HARD":
+        enemy1.create = True
+        enemy2.create = True
+        enemy3.create = True
+        enemy4.create = True
 
     main_menu.disable()
     main_menu.reset(1)
@@ -289,6 +285,8 @@ def maingame(difficulty):
         if enemy4.create:
             main_window.blit(enemy_image, (enemy4.x, enemy4.y))
 
+        print(enemy2.x,enemy2.y)
+
         main_window.blit(timelabel, (0, 0))
         main_window.blit(honeycount_label, (width_window - honeycount_width, height_window - honeycount_height))
 
@@ -297,10 +295,42 @@ def maingame(difficulty):
 
 # defs for Menu
 
+def change_difficulty(d):
+    print('Selected difficulty: {0}'.format(d))
+    DIFFICULTY[0] = d
+
 def mainmenu_background():
 
     main_window.fill((40, 0, 40))
 # -----------------------------------------------------------------------------
+
+# PLAY MENU
+play_menu = pygameMenu.Menu(main_window,
+                            bgfun=mainmenu_background,
+                            color_selected=(0,0,0),
+                            font=pygameMenu.fonts.FONT_BEBAS,
+                            font_color=(255, 255, 255),
+                            font_size=30,
+                            menu_alpha=100,
+                            menu_color=(228, 55, 36),
+                            menu_height=int(height_window * 0.6),
+                            menu_width=int(width_window * 0.6),
+                            onclose=PYGAME_MENU_DISABLE_CLOSE,
+                            option_shadow=False,
+                            title='Play menu',
+                            window_height=height_window,
+                            window_width=width_window
+                            )
+# When pressing return -> play(DIFFICULTY[0], font)
+play_menu.add_option('Start', maingame, DIFFICULTY,)
+play_menu.add_selector('Select difficulty', [('Easy', 'EASY'),
+                                             ('Medium', 'MEDIUM'),
+                                             ('Hard', 'HARD'),
+                                             ('very hard',"VERY HARD")],
+                       onreturn=None,
+                       onchange=change_difficulty)
+play_menu.add_option('Return to main menu', PYGAME_MENU_BACK)
+
 
 # MainMenu
 
@@ -317,7 +347,7 @@ main_menu = pygameMenu.Menu(main_window,
                             option_shadow=False
                             )
 
-main_menu.add_option('Play', maingame, DIFFICULTY)
+main_menu.add_option('Play', play_menu, DIFFICULTY)
 main_menu.add_option(element_name='Exit',
                      element=PYGAME_MENU_EXIT)
 
