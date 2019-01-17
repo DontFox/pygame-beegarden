@@ -20,8 +20,12 @@ main_window = pygame.display.set_mode((width_window,
 pygame.display.set_caption('bee-haney')
 clock = pygame.time.Clock()
 
-
 DIFFICULTY = ['EASY']
+
+__author__='Dmitry "DF" Kraychik'
+
+SCORE = ['pygame {}'.format(pygame.__version__), 'PyGameMenu {}'.format(pygameMenu.__version__), '', 'Author:{}'.format(__author__)]
+HELP = ['123','123','123']
 
 # -----------------------------------------------------------------------------
 
@@ -329,6 +333,58 @@ play_menu.add_selector('Select difficulty', [('Easy', 'EASY'),
 play_menu.add_option('Return to main menu', PYGAME_MENU_BACK)
 
 
+# About_menu
+
+about_menu = pygameMenu.TextMenu(main_window,
+                                 bgfun=mainmenu_background,
+                                 color_selected=(0,0,0),
+                                 font=pygameMenu.fonts.FONT_BEBAS,
+                                 font_color=(255,255,255),
+                                 font_size_title=30,
+                                 font_title=pygameMenu.fonts.FONT_8BIT,
+                                 menu_color=(228, 55, 36),
+                                 menu_color_title=(0,0,0),
+                                 menu_height=int(height_window * 0.6),
+                                 menu_width=int(width_window * 0.6),
+                                 onclose=PYGAME_MENU_DISABLE_CLOSE,
+                                 option_shadow=False,
+                                 text_color=(255,255,255),
+                                 text_fontsize=20,
+                                 title='About',
+                                 window_height=height_window,
+                                 window_width=width_window
+                                 )
+for m in SCORE:
+    about_menu.add_line(m)
+about_menu.add_line(PYGAMEMENU_TEXT_NEWLINE)
+about_menu.add_option('Return to menu', PYGAME_MENU_BACK)
+
+# HELP
+
+help_menu = pygameMenu.TextMenu(main_window,
+                                 bgfun=mainmenu_background,
+                                 color_selected=(0,0,0),
+                                 font=pygameMenu.fonts.FONT_BEBAS,
+                                 font_color=(255,255,255),
+                                 font_size_title=30,
+                                 font_title=pygameMenu.fonts.FONT_8BIT,
+                                 menu_color=(228, 55, 36),
+                                 menu_color_title=(0,0,0),
+                                 menu_height=int(height_window * 0.6),
+                                 menu_width=int(width_window * 0.6),
+                                 onclose=PYGAME_MENU_DISABLE_CLOSE,
+                                 option_shadow=False,
+                                 text_color=(255,255,255),
+                                 text_fontsize=20,
+                                 title='help',
+                                 window_height=height_window,
+                                 window_width=width_window
+                                 )
+
+for m in HELP:
+    help_menu.add_line(m)
+help_menu.add_option("Return to menu", PYGAME_MENU_BACK)
+
 # MainMenu
 
 main_menu = pygameMenu.Menu(main_window,
@@ -345,6 +401,8 @@ main_menu = pygameMenu.Menu(main_window,
                             )
 
 main_menu.add_option('Play', play_menu, DIFFICULTY)
+main_menu.add_option('Help', help_menu)
+main_menu.add_option('About', about_menu)
 main_menu.add_option(element_name='Exit',
                      element=PYGAME_MENU_EXIT)
 
