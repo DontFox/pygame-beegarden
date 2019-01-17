@@ -7,7 +7,7 @@ from pygameMenu.locals import *
 
 from config import *
 from Objects import bee, flower, beehive, enemy
-from images import bg, beehive_image, bee_image_L, bee_image_R, flower_image,enemy_image
+from images import bg, beehive_image, bee_image_L, bee_image_R, flower_image, enemy_image
 
 # -----------------------------------------------------------------------------
 
@@ -52,10 +52,10 @@ beehive1 = beehive(75,
                    )
 
 #   falling enemy
-enemy1 = enemy(random.randint(0 + limit, width_window - limit), 0)
-enemy2 = enemy(random.randint(0 + limit, width_window - limit), 0)
-enemy3 = enemy(random.randint(0 + limit, width_window - limit), 0)
-enemy4 = enemy(random.randint(0 + limit, width_window - limit), 0)
+enemy1 = enemy(random.randint(0 + limit, width_window - limit), 0, False)
+enemy2 = enemy(random.randint(0 + limit, width_window - limit), 0, False)
+enemy3 = enemy(random.randint(0 + limit, width_window - limit), 0, False)
+enemy4 = enemy(random.randint(0 + limit, width_window - limit), 0, False)
 
 # -----------------------------------------------------------------------------
 
@@ -113,10 +113,9 @@ def falling_enemy():
         #enemy1
 
         if enemy1.create and mybee.first_touch:
-            enemy1.create = True
 
             if enemy1.y>height_window:
-                enemy1 = enemy(random.randint(0 + limit, width_window - limit-enemy1.width), 0)
+                enemy1 = enemy(random.randint(0 + limit, width_window - limit-enemy1.width), 0, True)
             enemy1.y += enemy1.speed
             if mybee.rect.colliderect(enemy1.rect):
                 restart()
@@ -125,11 +124,9 @@ def falling_enemy():
         #enemy 2
 
         if enemy2.create and mybee.first_touch:
-            enemy1.create = True
-            enemy2.create = True
 
             if enemy2.y>height_window:
-                enemy2 = enemy(random.randint(0 + limit, width_window - limit-enemy2.width), 0)
+                enemy2 = enemy(random.randint(0 + limit, width_window - limit-enemy2.width), 0, True)
             enemy2.y += enemy2.speed
             if mybee.rect.colliderect(enemy2.rect):
                 restart()
@@ -137,12 +134,9 @@ def falling_enemy():
 
         #enemy3
         if enemy3.create and mybee.first_touch:
-            enemy1.create = True
-            enemy2.create = True
-            enemy3.create = True
 
             if enemy3.y>height_window:
-                enemy3 = enemy(random.randint(0 + limit, width_window - limit-enemy3.width), 0)
+                enemy3 = enemy(random.randint(0 + limit, width_window - limit-enemy3.width), 0, True)
             enemy3.y += enemy3.speed
             if mybee.rect.colliderect(enemy3.rect):
                 restart()
@@ -150,12 +144,8 @@ def falling_enemy():
 
         #enemy4
         if enemy4.create and mybee.first_touch:
-            enemy1.create = True
-            enemy2.create = True
-            enemy3.create = True
-            enemy4.create = True
             if enemy4.y>height_window:
-                enemy4 = enemy(random.randint(0 + limit, width_window - limit-enemy4.width), 0)
+                enemy4 = enemy(random.randint(0 + limit, width_window - limit-enemy4.width), 0, True)
             enemy4.y += enemy4.speed
             if mybee.rect.colliderect(enemy4.rect):
                 restart()
@@ -168,6 +158,7 @@ def falling_enemy():
         enemy4.create = False
 
 
+
 def maingame(difficulty):
     global  honeycount_label
     global timelabel
@@ -175,6 +166,7 @@ def maingame(difficulty):
     global milliseconds, stopwatch
     global clock
     global enemy1,enemy2,enemy3,enemy4
+    global beehive1
 
 
     difficulty = difficulty[0]
@@ -206,9 +198,13 @@ def maingame(difficulty):
             elif e.type == KEYDOWN:
                 if e.key == K_ESCAPE and main_menu.is_disabled():
                     main_menu.enable()
-
                     return
+        if beehive1.honey == beehive1.honey_max:
+            print(13212313213131231313131231321313132131313123131231321)
+            main_menu.enable()
+            return
 
+        mybee.create_rect()
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
@@ -231,13 +227,14 @@ def maingame(difficulty):
             if mybee.y <= limit_down:
                 mybee.y += mybee.speed
                 mybee.first_touch = True
+        if keys[pygame.K_f] and mybee.rect.colliderect(flower1.rect):
+            on_stop_at_flower()
+        if keys[pygame.K_f] and mybee.rect.colliderect(beehive1.rect):
+            on_stop_at_beehive()
 
         # check the  overlap
         mybee.create_rect()
-        if mybee.rect.colliderect(flower1.rect):
-            on_stop_at_flower()
-        if mybee.rect.colliderect(beehive1.rect):
-            on_stop_at_beehive()
+
 
         # honeycount
         honeycount_label = myfont.render('Bee:{} Beehive:{} Flower:{}'.format(mybee.honey,
@@ -285,7 +282,7 @@ def maingame(difficulty):
         if enemy4.create:
             main_window.blit(enemy_image, (enemy4.x, enemy4.y))
 
-        print(enemy2.x,enemy2.y)
+        print(enemy3.x,enemy3.y)
 
         main_window.blit(timelabel, (0, 0))
         main_window.blit(honeycount_label, (width_window - honeycount_width, height_window - honeycount_height))
@@ -352,14 +349,10 @@ main_menu.add_option(element_name='Exit',
                      element=PYGAME_MENU_EXIT)
 
 
-
 # -----------------------------------------------------------------------------
 
 
-
-
 while 1:
-
     clock.tick(60)
 
     events = pygame.event.get()
