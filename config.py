@@ -3,6 +3,9 @@ pygame.font.init()
 # window size
 width_window = 1000
 height_window = 563
+# flower size
+flower_width = 100
+flower_height = 104
 # начальная позиция пчелы
 bee_start_point_x=150
 bee_start_point_y=200
@@ -19,4 +22,4 @@ minutes= 0
 seconds= 0
 milliseconds= 0
 # flower
-honey_flower=700
+honey_flower=300

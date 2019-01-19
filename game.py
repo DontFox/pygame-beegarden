@@ -24,8 +24,8 @@ DIFFICULTY = ['EASY']
 
 __author__='Dmitry "DF" Kraychik'
 
-SCORE = ['pygame {}'.format(pygame.__version__), 'PyGameMenu {}'.format(pygameMenu.__version__), '', 'Author:{}'.format(__author__)]
-HELP = ['123','123','123']
+SCORE = ['pygame {}'.format(pygame.__version__), 'PyGameMenu {}'.format(pygameMenu.__version__)]
+HELP = ['Move - - - - UP, DOWN, LEFT, RIGHT','Give/Take Honey - - - - "F"']
 
 # -----------------------------------------------------------------------------
 
@@ -47,6 +47,10 @@ flower1 = flower(width_window-300,
                  150,
                  honey_flower
                  )
+
+#  flower 2 (hard mode)
+flower2 = flower(width_window-300,
+                 height_window-flower_height-100,honey_flower)
 
 #   beehives (x,y,honey)
 beehive1 = beehive(75,
@@ -164,7 +168,7 @@ def falling_enemy():
 
 
 def maingame(difficulty):
-    global  honeycount_label
+    global honeycount_label
     global timelabel
     global minutes, seconds
     global milliseconds, stopwatch
@@ -172,6 +176,7 @@ def maingame(difficulty):
     global enemy1,enemy2,enemy3,enemy4
     global beehive1
 
+    restart()
 
     difficulty = difficulty[0]
 
@@ -204,7 +209,6 @@ def maingame(difficulty):
                     main_menu.enable()
                     return
         if beehive1.honey == beehive1.honey_max:
-            print(13212313213131231313131231321313132131313123131231321)
             main_menu.enable()
             return
 
@@ -231,8 +235,11 @@ def maingame(difficulty):
             if mybee.y <= limit_down:
                 mybee.y += mybee.speed
                 mybee.first_touch = True
-        if keys[pygame.K_f] and mybee.rect.colliderect(flower1.rect):
+
+        # перекачка мёда
+        if keys[pygame.K_f] and (mybee.rect.colliderect(flower1.rect) or mybee.rect.colliderect(flower2.rect)):
             on_stop_at_flower()
+
         if keys[pygame.K_f] and mybee.rect.colliderect(beehive1.rect):
             on_stop_at_beehive()
 
@@ -267,11 +274,16 @@ def maingame(difficulty):
         # enemies
         falling_enemy()
 
-# def draw_window():
+        if (enemy1.create or enemy2.create or enemy3.create or enemy4.create) == False:
+            main_menu.enable()
+            return
+
+        # def draw_window():
         main_window.blit(bg, (0, 0))
 
         main_window.blit(beehive_image, (beehive1.x, beehive1.y))
         main_window.blit(flower_image, (flower1.x, flower1.y))
+        main_window.blit(flower_image, (flower2.x,flower2.y))
 
         if mybee.right:
             main_window.blit(bee_image_R,(mybee.x, mybee.y))
@@ -286,7 +298,6 @@ def maingame(difficulty):
         if enemy4.create:
             main_window.blit(enemy_image, (enemy4.x, enemy4.y))
 
-        print(enemy3.x,enemy3.y)
 
         main_window.blit(timelabel, (0, 0))
         main_window.blit(honeycount_label, (width_window - honeycount_width, height_window - honeycount_height))
@@ -322,7 +333,7 @@ play_menu = pygameMenu.Menu(main_window,
                             window_height=height_window,
                             window_width=width_window
                             )
-# When pressing return -> play(DIFFICULTY[0], font)
+
 play_menu.add_option('Start', maingame, DIFFICULTY,)
 play_menu.add_selector('Select difficulty', [('Easy', 'EASY'),
                                              ('Medium', 'MEDIUM'),
@@ -362,6 +373,7 @@ about_menu.add_option('Return to menu', PYGAME_MENU_BACK)
 # HELP
 
 help_menu = pygameMenu.TextMenu(main_window,
+                                 dopause=True,
                                  bgfun=mainmenu_background,
                                  color_selected=(0,0,0),
                                  font=pygameMenu.fonts.FONT_BEBAS,

@@ -30,8 +30,8 @@ class flower:
         self.x = x
         self.y = y
         self.honey = honey
-        self.width = 100
-        self.height = 104
+        self.width = flower_width
+        self.height = flower_height
         self.rect = pygame.Rect((self.x, self.y), (self.width, self.height))
 
     def restart(self,honey):
@@ -55,13 +55,13 @@ class beehive:
 
 class enemy:
     speed = 4
-    create = False
 
-    def __init__(self, x, y):
+    def __init__(self, x, y,create):
         self.x = x
         self.y = y
         self.width = 67
         self.height = 59
+        self.create = create
         self.rect = pygame.Rect((self.x, self.y), (self.width, self.height))
 
     def create_rect(self):
