@@ -47,7 +47,6 @@ flower1 = flower(width_window-300,
                  150,
                  honey_flower
                  )
-
 #  flower 2 (hard mode)
 flower2 = flower(width_window-300,
                  height_window-flower_height-100,honey_flower)
@@ -406,6 +405,9 @@ main_menu = pygameMenu.Menu(main_window,
                             title='Main Menu',
                             bgfun=mainmenu_background,
                             menu_color_title=(0, 0, 0),
+                            menu_color=(228, 55, 36),
+                            menu_height=int(height_window * 0.6),
+                            menu_width=int(width_window * 0.6),
                             enabled = True,
                             menu_alpha = 90,
                             onclose=PYGAME_MENU_DISABLE_CLOSE,
