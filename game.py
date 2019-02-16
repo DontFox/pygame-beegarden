@@ -54,8 +54,8 @@ flower2 = flower(width_window-300,
 #   beehives (x,y,honey)
 beehive1 = beehive(75,
                    height_window-50-117,
-                   0,
-                   flower1.honey
+                   flower1.honey,
+                   flower2.honey
                    )
 
 #   falling enemy
@@ -68,7 +68,8 @@ enemy4 = enemy(random.randint(0 + limit, width_window - limit), 0, False)
 
 # honeycount (see config.py)
 
-honeycount_surf=pygame.Surface((honeycount_width, honeycount_height)).convert()
+honeycount_surf = pygame.Surface((honeycount_width, honeycount_height)).convert()
+honeycount_surf2 = pygame.Surface((honeycount_width, honeycount_height)).convert()
 
 # -----------------------------------------------------------------------------
 
@@ -81,19 +82,32 @@ limit_right = width_window-mybee.width-limit
 
 # -----------------------------------------------------------------------------
 
-
+# Pumping honey
 def on_stop_at_flower():
-    if mybee.honey < 100:
-        if flower1.honey > 0:
-            flower1.honey -= speed_honey
-            mybee.honey = mybee.honey + speed_honey
+    if mybee.honey2 <= 0:
+        if mybee.honey < 100:
+            if flower1.honey > 0:
+                flower1.honey -= speed_honey
+                mybee.honey = mybee.honey + speed_honey
 
+def on_stop_at_flower2():
+    if mybee.honey <= 0:
+        if mybee.honey2 < 100:
+            if flower2.honey > 0:
+                flower2.honey -= speed_honey
+                mybee.honey2 += speed_honey
 
 def on_stop_at_beehive():
     if mybee.honey > 0:
         if beehive1.honey < beehive1.honey_max:
             mybee.honey -= speed_honey
             beehive1.honey += speed_honey
+def on_stop_at_beehive2():
+    if mybee.honey2 > 0:
+        if beehive1.honey2 < beehive1.honey_max2:
+            mybee.honey2 -=speed_honey
+            beehive1.honey2 += speed_honey
+
 
 
 def restart():
@@ -236,11 +250,14 @@ def maingame(difficulty):
                 mybee.first_touch = True
 
         # перекачка мёда
-        if keys[pygame.K_f] and (mybee.rect.colliderect(flower1.rect) or mybee.rect.colliderect(flower2.rect)):
+        if keys[pygame.K_f] and mybee.rect.colliderect(flower1.rect):
             on_stop_at_flower()
-
-        if keys[pygame.K_f] and mybee.rect.colliderect(beehive1.rect):
+        if keys[pygame.K_g] and mybee.rect.colliderect(flower2.rect):
+            on_stop_at_flower2()
+        if keys[pygame.K_f] and mybee.rect.colliderect(beehive1.rect)and not(keys[pygame.K_g]):
             on_stop_at_beehive()
+        if keys[pygame.K_g] and mybee.rect.colliderect(beehive1.rect)and not(keys[pygame.K_f]):
+            on_stop_at_beehive2()
 
         # check the  overlap
         mybee.create_rect()
@@ -249,7 +266,10 @@ def maingame(difficulty):
         # honeycount
         honeycount_label = myfont.render('Bee:{} Beehive:{} Flower:{}'.format(mybee.honey,
                                                                               beehive1.honey,
-                                                                              flower1.honey), True, (0, 0, 0))
+                                                                              flower1.honey), True, (40, 0, 255))
+        honeycount_label2 = myfont.render('Bee:{} Beehive:{} Flower:{}'.format(mybee.honey2,
+                                                                              beehive1.honey2,
+                                                                              flower2.honey), True, (255, 0, 40))
 
         # stopwatch
         if mybee.first_touch:
@@ -297,9 +317,11 @@ def maingame(difficulty):
         if enemy4.create:
             main_window.blit(enemy_image, (enemy4.x, enemy4.y))
 
+        print(mybee.honey2,beehive1.honey2,flower2.honey)
 
         main_window.blit(timelabel, (0, 0))
         main_window.blit(honeycount_label, (width_window - honeycount_width, height_window - honeycount_height))
+        main_window.blit(honeycount_label2, (width_window - honeycount_width, height_window - honeycount_height2))
 
         pygame.display.flip()
 

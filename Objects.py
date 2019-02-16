@@ -3,6 +3,7 @@ from config import *
 class bee:
     speed = 3
     honey = 0
+    honey2 = 0
     honey_max = 100
     left = False
     right = True
@@ -11,8 +12,8 @@ class bee:
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.width = 96
-        self.height = 82
+        self.width = 53
+        self.height = 45
 
     def create_rect(self):
         self.rect = pygame.Rect((self.x, self.y), (self.width, self.height))
@@ -39,13 +40,15 @@ class flower:
 
 
 class beehive:
-    def __init__(self, x, y, honey, honey_max):
+    honey = 0
+    honey2 = 0
+    def __init__(self, x, y, honey_max,honey_max2):
         self.x = x
         self.y = y
-        self.honey = honey
         self.honey_max = honey_max
-        self.width = 150
-        self.height = 117
+        self.honey_max2 = honey_max2
+        self.width = 83
+        self.height = 64
         self.rect = pygame.Rect((self.x, self.y), (self.width, self.height))
 
     def restart(self, honey, honey_max):
@@ -59,8 +62,8 @@ class enemy:
     def __init__(self, x, y,create):
         self.x = x
         self.y = y
-        self.width = 67
-        self.height = 59
+        self.width = 37
+        self.height = 32
         self.create = create
         self.rect = pygame.Rect((self.x, self.y), (self.width, self.height))
 
