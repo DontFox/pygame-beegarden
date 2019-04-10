@@ -8,6 +8,7 @@ class bee:
     left = False
     right = True
     first_touch = False
+    bubble = False
 
     def __init__(self, x, y):
         self.x = x
@@ -51,13 +52,15 @@ class beehive:
         self.height = 64
         self.rect = pygame.Rect((self.x, self.y), (self.width, self.height))
 
-    def restart(self, honey, honey_max):
+    def restart(self, honey, honey_max,honey2, honey_max2):
         self.honey_max = honey_max
         self.honey = honey
-
+        self.honey2 = honey2
+        self.honey_max2 = honey_max2
 
 class enemy:
     speed = 4
+
 
     def __init__(self, x, y,create):
         self.x = x
@@ -74,3 +77,23 @@ class enemy:
         self.x = x
         self.y = y
         self.create = False
+class stats:
+    score = 0
+
+class scoreboard:
+    def __init__(self):
+        self.text_color = (30, 30, 30)
+        self.font = pygame.font.SysFont(None, 48)
+        # Подготовка исходного изображения.
+        self.prep_score()
+    def prep_score(self):
+        score_str = str(stats.score)
+
+class bubble:
+    def __init__(self, x,  y):
+        self.x = x
+        self.y = y
+        self.width = 40
+        self.height = 40
+        self.create = False
+        self.rect = pygame.Rect((self.x, self.y), (self.width, self.height))

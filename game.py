@@ -6,7 +6,7 @@ import pygameMenu
 from pygameMenu.locals import *
 
 from config import *
-from Objects import bee, flower, beehive, enemy
+from Objects import bee, flower, beehive, enemy, bubble
 from images import bg, beehive_image, bee_image_L, bee_image_R, flower_image, enemy_image
 
 # -----------------------------------------------------------------------------
@@ -41,7 +41,6 @@ stopwatch_surf = pygame.Surface((160, 40)).convert()
 
 #   bee (x,y)
 mybee = bee(bee_start_point_x, bee_start_point_y)
-
 #   flower (x,y,honey)
 flower1 = flower(width_window-300,
                  150,
@@ -63,6 +62,13 @@ enemy1 = enemy(random.randint(0 + limit, width_window - limit), 0, False)
 enemy2 = enemy(random.randint(0 + limit, width_window - limit), 0, False)
 enemy3 = enemy(random.randint(0 + limit, width_window - limit), 0, False)
 enemy4 = enemy(random.randint(0 + limit, width_window - limit), 0, False)
+enemy5 = enemy(random.randint(0 + limit, width_window - limit), 0, False)
+
+enemy01 = enemy(600, 300, False)
+
+# Bubble (Shield)
+
+bubble1 = bubble(random.randint(0+limit, width_window - limit), 0)
 
 # -----------------------------------------------------------------------------
 
@@ -118,65 +124,82 @@ def restart():
     milliseconds = 0
     mybee.restart(bee_start_point_x,bee_start_point_y)
     flower1.restart(honey_flower)
-    beehive1.restart(0,flower1.honey)
+    flower2.restart(honey_flower)
+    beehive1.restart(0,flower1.honey,0,flower2.honey)
     enemy1.restart(random.randint(0 + limit, width_window - limit), 0)
     enemy2.restart(random.randint(0 + limit, width_window - limit), 0)
     enemy3.restart(random.randint(0 + limit, width_window - limit), 0)
     enemy4.restart(random.randint(0 + limit, width_window - limit), 0)
+    enemy5.restart(random.randint(0 + limit, width_window - limit), 0)
 
 
 def falling_enemy():
 
-    global enemy1, enemy2, enemy3, enemy4
+    global enemy1, enemy2, enemy3, enemy4, enemy5, enemy01
 
-    if beehive1.honey != beehive1.honey_max:
+    if beehive1.honey != beehive1.honey_max or beehive1.honey2 != beehive1.honey_max2:
 
         #enemy1
 
         if enemy1.create and mybee.first_touch:
-
+            # if enemy1.rect.colliderect(enemy2.rect) !=True or enemy1.rect.colliderect(enemy3.rect):
             if enemy1.y>height_window:
                 enemy1 = enemy(random.randint(0 + limit, width_window - limit-enemy1.width), 0, True)
             enemy1.y += enemy1.speed
             if mybee.rect.colliderect(enemy1.rect):
                 restart()
+
             enemy1.create_rect()
 
         #enemy 2
 
         if enemy2.create and mybee.first_touch:
-
-            if enemy2.y>height_window:
-                enemy2 = enemy(random.randint(0 + limit, width_window - limit-enemy2.width), 0, True)
-            enemy2.y += enemy2.speed
-            if mybee.rect.colliderect(enemy2.rect):
-                restart()
-            enemy2.create_rect()
+            if seconds >= 1 or minutes >= 1:
+                if enemy2.y>height_window:
+                    enemy2 = enemy(random.randint(0 + limit, width_window - limit-enemy2.width), 0, True)
+                enemy2.y += enemy2.speed
+                if mybee.rect.colliderect(enemy2.rect):
+                    restart()
+                enemy2.create_rect()
 
         #enemy3
         if enemy3.create and mybee.first_touch:
-
-            if enemy3.y>height_window:
-                enemy3 = enemy(random.randint(0 + limit, width_window - limit-enemy3.width), 0, True)
-            enemy3.y += enemy3.speed
-            if mybee.rect.colliderect(enemy3.rect):
-                restart()
-            enemy3.create_rect()
+            if seconds >=2 or minutes >= 1:
+                if enemy3.y>height_window:
+                    enemy3 = enemy(random.randint(0 + limit, width_window - limit-enemy3.width), 0, True)
+                enemy3.y += enemy3.speed
+                if mybee.rect.colliderect(enemy3.rect):
+                    restart()
+                enemy3.create_rect()
 
         #enemy4
         if enemy4.create and mybee.first_touch:
-            if enemy4.y>height_window:
-                enemy4 = enemy(random.randint(0 + limit, width_window - limit-enemy4.width), 0, True)
-            enemy4.y += enemy4.speed
-            if mybee.rect.colliderect(enemy4.rect):
-                restart()
-            enemy4.create_rect()
+            if seconds >=3 or minutes >=1:
+                if enemy4.y>height_window:
+                    enemy4 = enemy(random.randint(0 + limit, width_window - limit-enemy4.width), 0, True)
+                enemy4.y += enemy4.speed
+                if mybee.rect.colliderect(enemy4.rect):
+                    restart()
+                enemy4.create_rect()
 
+
+        if enemy5.create and mybee.first_touch:
+            if seconds >= 4 or minutes >= 1:
+                if enemy5.y>height_window:
+                    enemy5 = enemy(random.randint(0 + limit, width_window - limit-enemy5.width), 0, True)
+                enemy5.y += enemy5.speed
+                if mybee.rect.colliderect(enemy5.rect):
+                    restart()
+                enemy5.create_rect()
+        if enemy01.create:
+            if mybee.rect.colliderect((enemy01.rect)):
+                restart()
     else:
         enemy1.create = False
         enemy2.create = False
         enemy3.create = False
         enemy4.create = False
+        enemy5.create = False
 
 
 
@@ -186,7 +209,7 @@ def maingame(difficulty):
     global minutes, seconds
     global milliseconds, stopwatch
     global clock
-    global enemy1,enemy2,enemy3,enemy4
+    global enemy1,enemy2,enemy3,enemy4, enemy5
     global beehive1
 
     restart()
@@ -195,24 +218,44 @@ def maingame(difficulty):
 
     if difficulty == 'EASY':
         enemy1.create = True
+        enemy2.create = True
+        honey_flower = 200
     elif difficulty == 'MEDIUM':
         enemy1.create = True
         enemy2.create = True
+        enemy3.create = True
+        honey_flower = 300
     elif difficulty == 'HARD':
         enemy1.create = True
         enemy2.create = True
         enemy3.create = True
+        enemy4.create = True
+        honey_flower = 500
     elif difficulty == "VERY HARD":
         enemy1.create = True
         enemy2.create = True
         enemy3.create = True
         enemy4.create = True
+        enemy5.create = True
+        enemy01.create = True
+        honey_flower = 700
+    elif difficulty == 'ENDLESS':
+        enemy1.create = True
+        enemy2.create = True
+        enemy3.create = True
+        enemy4.create = True
+        enemy5.create = True
+        honey_flower = 100000
+
+    flower1.restart(honey_flower)
+    flower2.restart(honey_flower)
+    beehive1.restart(0,flower1.honey,0,flower2.honey)
 
     main_menu.disable()
     main_menu.reset(1)
 
     while 1:
-        clock.tick()
+        clock.tick(60)
         playevents = pygame.event.get()
         for e in playevents:
             if e.type == QUIT:
@@ -221,7 +264,7 @@ def maingame(difficulty):
                 if e.key == K_ESCAPE and main_menu.is_disabled():
                     main_menu.enable()
                     return
-        if beehive1.honey == beehive1.honey_max:
+        if beehive1.honey == beehive1.honey_max and beehive1.honey2 == beehive1.honey_max2:
             main_menu.enable()
             return
 
@@ -275,7 +318,7 @@ def maingame(difficulty):
         if mybee.first_touch:
             if minutes == 0 and seconds == 0:
                 stopwatch = pygame.time.Clock()
-            if beehive1.honey != beehive1.honey_max:
+            if beehive1.honey != beehive1.honey_max and beehive1.honey2 != beehive1.honey_max2:
                 if milliseconds > 1000:
                     seconds += 1
                     milliseconds -= 1000
@@ -293,7 +336,18 @@ def maingame(difficulty):
         # enemies
         falling_enemy()
 
-        if (enemy1.create or enemy2.create or enemy3.create or enemy4.create) == False:
+        # Bubble
+
+        if seconds == random.randint(10,11):
+            bubble1.create = True
+        if bubble1.create:
+
+            if mybee.rect.colliderect(bubble1.rect):
+                mybee.bubble = True
+
+
+
+        if (enemy1.create or enemy2.create or enemy3.create or enemy4.create or enemy5.create) == False:
             main_menu.enable()
             return
 
@@ -311,13 +365,20 @@ def maingame(difficulty):
         if enemy1.create:
             main_window.blit(enemy_image, (enemy1.x, enemy1.y))
         if enemy2.create:
-            main_window.blit(enemy_image, (enemy2.x, enemy2.y))
+            if seconds >= 1 or minutes >= 1:
+                main_window.blit(enemy_image, (enemy2.x, enemy2.y))
         if enemy3.create:
-            main_window.blit(enemy_image, (enemy3.x, enemy3.y))
+            if seconds >= 2 or minutes >= 1:
+                main_window.blit(enemy_image, (enemy3.x, enemy3.y))
         if enemy4.create:
-            main_window.blit(enemy_image, (enemy4.x, enemy4.y))
-
-        print(mybee.honey2,beehive1.honey2,flower2.honey)
+            if seconds >= 3 or minutes >= 1:
+                main_window.blit(enemy_image, (enemy4.x, enemy4.y))
+        if enemy5.create:
+            if seconds >= 4 or minutes >= 1:
+                main_window.blit(enemy_image, (enemy5.x, enemy5.y))
+        if enemy01.create:
+            main_window.blit(enemy_image, (enemy01.x, enemy01.y))
+        print(beehive1.honey,beehive1.honey_max,beehive1.honey2,beehive1.honey_max2)
 
         main_window.blit(timelabel, (0, 0))
         main_window.blit(honeycount_label, (width_window - honeycount_width, height_window - honeycount_height))
@@ -359,7 +420,8 @@ play_menu.add_option('Start', maingame, DIFFICULTY,)
 play_menu.add_selector('Select difficulty', [('Easy', 'EASY'),
                                              ('Medium', 'MEDIUM'),
                                              ('Hard', 'HARD'),
-                                             ('very hard',"VERY HARD")],
+                                             ('very hard',"VERY HARD"),
+                                             ('Endless', 'ENDLESS')],
                        onreturn=None,
                        onchange=change_difficulty)
 play_menu.add_option('Return to main menu', PYGAME_MENU_BACK)
