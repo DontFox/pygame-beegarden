@@ -77,6 +77,17 @@ class enemy:
         self.x = x
         self.y = y
         self.create = False
+
+class obstacle(enemy):
+
+    def __init__(self, x, y, width, height, create):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.create = create
+        self.rect = pygame.Rect((self.x, self.y), (self.width, self.height))
+
 class stats:
     score = 0
 
