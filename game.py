@@ -17,7 +17,8 @@ pygame.init()
 
 main_window = pygame.display.set_mode((width_window,
                                        height_window))
-pygame.display.set_caption('bee-haney')
+pygame.display.set_caption('Bee in the forest. How to collect all the pollen?')
+pygame.display.set_icon(bee_image_R)
 clock = pygame.time.Clock()
 
 DIFFICULTY = ['EASY']
@@ -51,11 +52,13 @@ flower2 = flower(width_window-300,
                  height_window-flower_height-100,honey_flower)
 
 #   beehives (x,y,honey)
-beehive1 = beehive(75,
-                   height_window-50-117,
+beehive1 = beehive(115,
+                   379,
                    flower1.honey,
-                   flower2.honey
                    )
+beehive2 = beehive(210,
+                   379,
+                   flower2.honey)
 
 #   falling enemy
 enemy1 = enemy(random.randint(0 + limit, width_window - limit), 0, False)
@@ -310,12 +313,12 @@ def maingame(difficulty):
 
 
         # honeycount
-        honeycount_label = myfont.render('Bee:{} Beehive:{} Flower:{}'.format(mybee.honey,
-                                                                              beehive1.honey,
-                                                                              flower1.honey), True, (40, 0, 255))
-        honeycount_label2 = myfont.render('Bee:{} Beehive:{} Flower:{}'.format(mybee.honey2,
-                                                                              beehive1.honey2,
-                                                                              flower2.honey), True, (255, 0, 40))
+        honeycount_label = myfont.render('Bee:{} beehive1:{} Beehive2:{} Flower1:{} Flower2:{}'.format(mybee.honey+mybee.honey2,
+                                                                              beehive1.honey,beehive2.honey,
+                                                                              flower1.honey,flower2.honey), True, (255, 255, 255),(70,70,70))
+        # honeycount_label2 = myfont.render('Bee:{} Beehive:{} Flower:{}'.format(mybee.honey2,
+        #                                                                       beehive1.honey2,
+        #                                                                       flower2.honey), True, (255, 0, 40),(0,100,200))
 
         # stopwatch
         if mybee.first_touch:
@@ -358,6 +361,7 @@ def maingame(difficulty):
         main_window.blit(bg, (0, 0))
 
         main_window.blit(beehive_image, (beehive1.x, beehive1.y))
+        main_window.blit(beehive_image, (beehive2.x, beehive2.y))
         main_window.blit(flower_image, (flower1.x, flower1.y))
         main_window.blit(flower_image, (flower2.x,flower2.y))
 
@@ -386,8 +390,8 @@ def maingame(difficulty):
         print(beehive1.honey,beehive1.honey_max,beehive1.honey2,beehive1.honey_max2)
 
         main_window.blit(timelabel, (0, 0))
-        main_window.blit(honeycount_label, (width_window - honeycount_width, height_window - honeycount_height))
-        main_window.blit(honeycount_label2, (width_window - honeycount_width, height_window - honeycount_height2))
+        main_window.blit(honeycount_label, (width_window - honeycount_width, height_window - honeycount_height2))
+        # main_window.blit(honeycount_label2, (width_window - honeycount_width, height_window - honeycount_height2))
 
         pygame.display.flip()
 
