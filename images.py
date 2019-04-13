@@ -1,6 +1,6 @@
 import pygame
 # bg = pygame.image.load('sprites/background.jpg')
-bg = pygame.image.load('sprites/background.png')
+bg = pygame.image.load('sprites/background (2).png')
 #   bee,beehive,flower
 bee_image_R=pygame.image.load('sprites/bee_R_new.png')
 bee_image_L=pygame.image.load("sprites/bee_L_new.png")

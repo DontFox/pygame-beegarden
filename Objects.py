@@ -1,7 +1,7 @@
 import pygame
 from config import *
 class bee:
-    speed = 3
+    speed = 4.5
     honey = 0
     honey2 = 0
     honey_max = 100
@@ -59,7 +59,7 @@ class beehive:
         self.honey_max2 = honey_max2
 
 class enemy:
-    speed = 4
+    speed = 6
 
 
     def __init__(self, x, y,create):

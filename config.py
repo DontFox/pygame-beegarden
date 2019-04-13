@@ -1,8 +1,8 @@
 import pygame
 pygame.font.init()
 # window size
-width_window = 1000
-height_window = 563
+width_window = 1440
+height_window = 480
 # flower size
 flower_width = 57
 flower_height = 55
