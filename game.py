@@ -65,7 +65,7 @@ enemy4 = enemy(random.randint(0 + limit, width_window - limit), 0, False)
 enemy5 = enemy(random.randint(0 + limit, width_window - limit), 0, False)
 
 enemy01 = enemy(600, 300, False)
-enemy02 = obstacle(300,300,400,171,False)
+# enemy02 = obstacle(300,300,400,171,False)
 
 
 # Bubble (Shield)
@@ -240,7 +240,7 @@ def maingame(difficulty):
         enemy4.create = True
         enemy5.create = True
         enemy01.create = True
-        enemy02.create = True
+        # enemy02.create = True
         honey_flower = 700
     elif difficulty == 'ENDLESS':
         enemy1.create = True
@@ -381,8 +381,8 @@ def maingame(difficulty):
                 main_window.blit(enemy_image, (enemy5.x, enemy5.y))
         if enemy01.create:
             main_window.blit(enemy_image, (enemy01.x, enemy01.y))
-        if enemy02.create:
-            main_window.blit(enemy_image_obstacle, (enemy02.x,enemy02.y))
+        # if enemy02.create:
+        #     main_window.blit(enemy_image_obstacle, (enemy02.x,enemy02.y))
         print(beehive1.honey,beehive1.honey_max,beehive1.honey2,beehive1.honey_max2)
 
         main_window.blit(timelabel, (0, 0))
