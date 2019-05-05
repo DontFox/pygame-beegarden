@@ -43,13 +43,13 @@ stopwatch_surf = pygame.Surface((160, 40)).convert()
 #   bee (x,y)
 mybee = bee(bee_start_point_x, bee_start_point_y)
 #   flower (x,y,honey)
-flower1 = flower(width_window-300,
-                 150,
+flower1 = flower(600,
+                 379,
                  honey_flower
                  )
 #  flower 2 (hard mode)
-flower2 = flower(width_window-300,
-                 height_window-flower_height-100,honey_flower)
+flower2 = flower(800,
+                 379,honey_flower)
 
 #   beehives (x,y,honey)
 beehive1 = beehive(115,
@@ -86,7 +86,7 @@ honeycount_surf2 = pygame.Surface((honeycount_width, honeycount_height)).convert
 
 # limitsize (see config.py)
 
-limit_down = height_window-mybee.height-limit
+limit_down = height_window-mybee.height-limit-35
 limit_up = limit
 limit_left = limit
 limit_right = width_window-mybee.width-limit
@@ -115,9 +115,9 @@ def on_stop_at_beehive():
             beehive1.honey += speed_honey
 def on_stop_at_beehive2():
     if mybee.honey2 > 0:
-        if beehive1.honey2 < beehive1.honey_max2:
+        if beehive2.honey < beehive2.honey_max:
             mybee.honey2 -=speed_honey
-            beehive1.honey2 += speed_honey
+            beehive2.honey += speed_honey
 
 
 
@@ -130,7 +130,8 @@ def restart():
     mybee.restart(bee_start_point_x,bee_start_point_y)
     flower1.restart(honey_flower)
     flower2.restart(honey_flower)
-    beehive1.restart(0,flower1.honey,0,flower2.honey)
+    beehive1.restart(0,flower1.honey)
+    beehive2.restart(0,flower2.honey)
     enemy1.restart(random.randint(0 + limit, width_window - limit), 0)
     enemy2.restart(random.randint(0 + limit, width_window - limit), 0)
     enemy3.restart(random.randint(0 + limit, width_window - limit), 0)
@@ -142,7 +143,7 @@ def falling_enemy():
 
     global enemy1, enemy2, enemy3, enemy4, enemy5, enemy01
 
-    if beehive1.honey != beehive1.honey_max or beehive1.honey2 != beehive1.honey_max2:
+    if beehive1.honey != beehive1.honey_max or beehive2.honey != beehive2.honey_max:
 
         #enemy1
 
@@ -255,7 +256,8 @@ def maingame(difficulty):
 
     flower1.restart(honey_flower)
     flower2.restart(honey_flower)
-    beehive1.restart(0,flower1.honey,0,flower2.honey)
+    beehive1.restart(0,flower1.honey,)
+    beehive2.restart(0,flower2.honey)
 
     main_menu.disable()
     main_menu.reset(1)
@@ -270,7 +272,7 @@ def maingame(difficulty):
                 if e.key == K_ESCAPE and main_menu.is_disabled():
                     main_menu.enable()
                     return
-        if beehive1.honey == beehive1.honey_max and beehive1.honey2 == beehive1.honey_max2:
+        if beehive1.honey == beehive1.honey_max and beehive2.honey == beehive2.honey_max:
             main_menu.enable()
             return
 
@@ -305,38 +307,37 @@ def maingame(difficulty):
             on_stop_at_flower2()
         if keys[pygame.K_f] and mybee.rect.colliderect(beehive1.rect)and not(keys[pygame.K_g]):
             on_stop_at_beehive()
-        if keys[pygame.K_g] and mybee.rect.colliderect(beehive1.rect)and not(keys[pygame.K_f]):
+        if keys[pygame.K_g] and mybee.rect.colliderect(beehive2.rect)and not(keys[pygame.K_f]):
             on_stop_at_beehive2()
 
         # check the  overlap
         mybee.create_rect()
 
 
-        # honeycount
-        honeycount_label = myfont.render('Bee:{} beehive1:{} Beehive2:{} Flower1:{} Flower2:{}'.format(mybee.honey+mybee.honey2,
-                                                                              beehive1.honey,beehive2.honey,
-                                                                              flower1.honey,flower2.honey), True, (255, 255, 255),(70,70,70))
-        # honeycount_label2 = myfont.render('Bee:{} Beehive:{} Flower:{}'.format(mybee.honey2,
-        #                                                                       beehive1.honey2,
-        #                                                                       flower2.honey), True, (255, 0, 40),(0,100,200))
+
+        beehive1_label = myfont.render('{}'.format(beehive1.honey), True, (255, 50, 120),(60,60,60))
+        beehive2_label = myfont.render('{}'.format(beehive2.honey), True, (50, 120, 255), (60, 60, 60))
+        flower1_label = myfont.render('{}'.format(flower1.honey), True, (255, 50, 120), )
+        flower2_label = myfont.render('{}'.format(flower2.honey), True, (50, 120, 255), )
 
         # stopwatch
         if mybee.first_touch:
             if minutes == 0 and seconds == 0:
                 stopwatch = pygame.time.Clock()
-            if beehive1.honey != beehive1.honey_max and beehive1.honey2 != beehive1.honey_max2:
+            if 1:
                 if milliseconds > 1000:
                     seconds += 1
                     milliseconds -= 1000
                     main_window.blit(stopwatch_surf, (0, 0))
-                if seconds > 60:
+                if seconds > 59:
                     minutes += 1
                     seconds -= 60
                 milliseconds += stopwatch.tick_busy_loop(60)
 
         timelabel = myfont.render("{}:{}".format(minutes, seconds),
                                   True,
-                                  (0, 0, 0)
+                                  (255, 255, 255),
+                                  (15,15,15)
                                   )
 
         # enemies
@@ -385,13 +386,12 @@ def maingame(difficulty):
                 main_window.blit(enemy_image, (enemy5.x, enemy5.y))
         if enemy01.create:
             main_window.blit(enemy_image, (enemy01.x, enemy01.y))
-        # if enemy02.create:
-        #     main_window.blit(enemy_image_obstacle, (enemy02.x,enemy02.y))
-        print(beehive1.honey,beehive1.honey_max,beehive1.honey2,beehive1.honey_max2)
 
-        main_window.blit(timelabel, (0, 0))
-        main_window.blit(honeycount_label, (width_window - honeycount_width, height_window - honeycount_height2))
-        # main_window.blit(honeycount_label2, (width_window - honeycount_width, height_window - honeycount_height2))
+        main_window.blit(timelabel, (500, 0))
+        main_window.blit(beehive1_label, (135, 448))
+        main_window.blit(beehive2_label, (230, 448))
+        main_window.blit(flower1_label, (608, 448))
+        main_window.blit(flower2_label, (808, 448))
 
         pygame.display.flip()
 
@@ -517,7 +517,7 @@ main_menu.add_option(element_name='Exit',
 # -----------------------------------------------------------------------------
 
 
-while 1:
+while False == False:
     clock.tick(60)
 
     events = pygame.event.get()
