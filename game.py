@@ -15,8 +15,7 @@ from images import bg, beehive_image, bee_image_L, bee_image_R, flower_image, en
 
 pygame.init()
 
-main_window = pygame.display.set_mode((width_window,
-                                       height_window))
+main_window = pygame.display.set_mode((width_window, height_window))
 pygame.display.set_caption('Bee in the forest. How to collect all the pollen?')
 pygame.display.set_icon(bee_image_R)
 clock = pygame.time.Clock()
@@ -25,8 +24,8 @@ DIFFICULTY = ['EASY']
 
 __author__='Dmitry "DF" Kraychik'
 
-SCORE = ['pygame {}'.format(pygame.__version__), 'PyGameMenu {}'.format(pygameMenu.__version__)]
-HELP = ['Move - - - - UP, DOWN, LEFT, RIGHT','Give/Take Honey - - - - "F"']
+HELP = ['Move - - - - UP, DOWN, LEFT, RIGHT','Give/Take Honey - - - - "F","G"']
+ABOUT = ['pygame {}'.format(pygame.__version__), 'PyGameMenu {}'.format(pygameMenu.__version__)]
 
 # -----------------------------------------------------------------------------
 
@@ -148,7 +147,6 @@ def falling_enemy():
         #enemy1
 
         if enemy1.create and mybee.first_touch:
-            # if enemy1.rect.colliderect(enemy2.rect) !=True or enemy1.rect.colliderect(enemy3.rect):
             if enemy1.y>height_window:
                 enemy1 = enemy(random.randint(0 + limit, width_window - limit-enemy1.width), 0, True)
             enemy1.y += enemy1.speed
@@ -169,6 +167,7 @@ def falling_enemy():
                 enemy2.create_rect()
 
         #enemy3
+
         if enemy3.create and mybee.first_touch:
             if seconds >=2 or minutes >= 1:
                 if enemy3.y>height_window:
@@ -179,6 +178,7 @@ def falling_enemy():
                 enemy3.create_rect()
 
         #enemy4
+
         if enemy4.create and mybee.first_touch:
             if seconds >=3 or minutes >=1:
                 if enemy4.y>height_window:
@@ -210,13 +210,8 @@ def falling_enemy():
 
 
 def maingame(difficulty):
-    global honeycount_label
-    global timelabel
-    global minutes, seconds
-    global milliseconds, stopwatch
-    global clock
-    global enemy1,enemy2,enemy3,enemy4, enemy5
-    global beehive1
+    global honeycount_label, timelabel, minutes, seconds, milliseconds, stopwatch, clock
+    global enemy1,enemy2,enemy3,enemy4, enemy5, beehive1
 
     restart()
 
@@ -243,21 +238,13 @@ def maingame(difficulty):
         enemy3.create = True
         enemy4.create = True
         enemy5.create = True
-        enemy01.create = True
-        # enemy02.create = True
+
         honey_flower = 700
-    elif difficulty == 'ENDLESS':
-        enemy1.create = True
-        enemy2.create = True
-        enemy3.create = True
-        enemy4.create = True
-        enemy5.create = True
-        honey_flower = 100000
 
     flower1.restart(honey_flower)
     flower2.restart(honey_flower)
-    beehive1.restart(0,flower1.honey,)
-    beehive2.restart(0,flower2.honey)
+    beehive1.restart(0, flower1.honey)
+    beehive2.restart(0, flower2.honey)
 
     main_menu.disable()
     main_menu.reset(1)
@@ -313,12 +300,11 @@ def maingame(difficulty):
         # check the  overlap
         mybee.create_rect()
 
-
-
-        beehive1_label = myfont.render('{}'.format(beehive1.honey), True, (255, 50, 120),(60,60,60))
-        beehive2_label = myfont.render('{}'.format(beehive2.honey), True, (50, 120, 255), (60, 60, 60))
-        flower1_label = myfont.render('{}'.format(flower1.honey), True, (255, 50, 120), )
-        flower2_label = myfont.render('{}'.format(flower2.honey), True, (50, 120, 255), )
+        # labels for count
+        beehive1_label = myfont.render('{}'.format(beehive1.honey), True, (255, 50, 120))
+        beehive2_label = myfont.render('{}'.format(beehive2.honey), True, (50, 120, 255))
+        flower1_label = myfont.render('{}'.format(flower1.honey), True, (255, 50, 120))
+        flower2_label = myfont.render('{}'.format(flower2.honey), True, (50, 120, 255))
 
         # stopwatch
         if mybee.first_touch:
@@ -334,31 +320,17 @@ def maingame(difficulty):
                     seconds -= 60
                 milliseconds += stopwatch.tick_busy_loop(60)
 
-        timelabel = myfont.render("{}:{}".format(minutes, seconds),
-                                  True,
-                                  (255, 255, 255),
-                                  (15,15,15)
-                                  )
+        # label for stopwatch
+        timelabel = myfont.render("{}:{}".format(minutes, seconds), True, (255, 255, 255), (15, 15, 15))
 
         # enemies
         falling_enemy()
-
-        # Bubble
-
-        if seconds == random.randint(10,11):
-            bubble1.create = True
-        if bubble1.create:
-
-            if mybee.rect.colliderect(bubble1.rect):
-                mybee.bubble = True
-
-
 
         if (enemy1.create or enemy2.create or enemy3.create or enemy4.create or enemy5.create) == False:
             main_menu.enable()
             return
 
-        # def draw_window():
+
         main_window.blit(bg, (0, 0))
 
         main_window.blit(beehive_image, (beehive1.x, beehive1.y))
@@ -382,7 +354,7 @@ def maingame(difficulty):
             if seconds >= 3 or minutes >= 1:
                 main_window.blit(enemy_image, (enemy4.x, enemy4.y))
         if enemy5.create:
-            if seconds >= 4 or minutes >= 1:
+            if seconds >= 6 or minutes >= 1:
                 main_window.blit(enemy_image, (enemy5.x, enemy5.y))
         if enemy01.create:
             main_window.blit(enemy_image, (enemy01.x, enemy01.y))
@@ -405,6 +377,7 @@ def change_difficulty(d):
 def mainmenu_background():
 
     main_window.fill((40, 0, 40))
+
 # -----------------------------------------------------------------------------
 
 # PLAY MENU
@@ -429,8 +402,7 @@ play_menu.add_option('Start', maingame, DIFFICULTY,)
 play_menu.add_selector('Select difficulty', [('Easy', 'EASY'),
                                              ('Medium', 'MEDIUM'),
                                              ('Hard', 'HARD'),
-                                             ('very hard',"VERY HARD"),
-                                             ('Endless', 'ENDLESS')],
+                                             ('very hard',"VERY HARD")],
                        onreturn=None,
                        onchange=change_difficulty)
 play_menu.add_option('Return to main menu', PYGAME_MENU_BACK)
@@ -443,8 +415,8 @@ about_menu = pygameMenu.TextMenu(main_window,
                                  color_selected=(0,0,0),
                                  font=pygameMenu.fonts.FONT_BEBAS,
                                  font_color=(255,255,255),
-                                 font_size_title=30,
-                                 font_title=pygameMenu.fonts.FONT_8BIT,
+                                 # font_size_title=30,
+                                 # font_title=pygameMenu.fonts.FONT_8BIT,
                                  menu_color=(228, 55, 36),
                                  menu_color_title=(0,0,0),
                                  menu_height=int(height_window * 0.6),
@@ -457,7 +429,7 @@ about_menu = pygameMenu.TextMenu(main_window,
                                  window_height=height_window,
                                  window_width=width_window
                                  )
-for m in SCORE:
+for m in ABOUT:
     about_menu.add_line(m)
 about_menu.add_line(PYGAMEMENU_TEXT_NEWLINE)
 about_menu.add_option('Return to menu', PYGAME_MENU_BACK)
@@ -470,8 +442,8 @@ help_menu = pygameMenu.TextMenu(main_window,
                                  color_selected=(0,0,0),
                                  font=pygameMenu.fonts.FONT_BEBAS,
                                  font_color=(255,255,255),
-                                 font_size_title=30,
-                                 font_title=pygameMenu.fonts.FONT_8BIT,
+                                 # font_size_title=30,
+                                 # font_title=pygameMenu.fonts.FONT_8BIT,
                                  menu_color=(228, 55, 36),
                                  menu_color_title=(0,0,0),
                                  menu_height=int(height_window * 0.6),
