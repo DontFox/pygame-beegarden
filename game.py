@@ -359,7 +359,7 @@ def maingame(difficulty):
         if enemy01.create:
             main_window.blit(enemy_image, (enemy01.x, enemy01.y))
 
-        main_window.blit(timelabel, (500, 0))
+        main_window.blit(timelabel, (488, 0))
         main_window.blit(beehive1_label, (135, 448))
         main_window.blit(beehive2_label, (230, 448))
         main_window.blit(flower1_label, (608, 448))

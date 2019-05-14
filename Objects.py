@@ -91,13 +91,3 @@ class obstacle(enemy):
         self.height = height
         self.create = create
         self.rect = pygame.Rect((self.x, self.y), (self.width, self.height))
-
-
-class bubble:
-    def __init__(self, x,  y):
-        self.x = x
-        self.y = y
-        self.width = 40
-        self.height = 40
-        self.create = False
-        self.rect = pygame.Rect((self.x, self.y), (self.width, self.height))
