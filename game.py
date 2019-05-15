@@ -1,13 +1,12 @@
 import pygame, random
 from pygame.locals import *
-import sys
 
 import pygameMenu
 from pygameMenu.locals import *
 
 from config import *
-from Objects import bee, flower, beehive, enemy, bubble, obstacle
-from images import bg, beehive_image, bee_image_L, bee_image_R, flower_image, enemy_image, enemy_image_obstacle
+from Objects import bee, flower, beehive, enemy
+from images import bg, beehive_image, bee_image_L, bee_image_R, flower_image, enemy_image
 
 # -----------------------------------------------------------------------------
 
@@ -17,21 +16,21 @@ pygame.init()
 
 main_window = pygame.display.set_mode((width_window, height_window))
 pygame.display.set_caption('Bee in the forest. How to collect all the pollen?')
-pygame.display.set_icon(bee_image_R)
+pygame.display.set_icon(pygame.image.load("icon.ico"))
+
 clock = pygame.time.Clock()
 
 DIFFICULTY = ['EASY']
 
 __author__='Dmitry "DF" Kraychik'
-
-HELP = ['Move - - - - UP, DOWN, LEFT, RIGHT','Give/Take Honey - - - - "F","G"']
+HELP = ['Move - - - - UP, DOWN, LEFT, RIGHT', 'Give/Take Honey - - - - "F","G"']
 ABOUT = ['pygame {}'.format(pygame.__version__), 'PyGameMenu {}'.format(pygameMenu.__version__)]
 
 # -----------------------------------------------------------------------------
 
 # stopwatch_config
 
-stopwatch= pygame.time.Clock()
+stopwatch = pygame.time.Clock()
 myfont = pygame.font.SysFont("monospace", 25, bold=True)
 stopwatch_surf = pygame.Surface((160, 40)).convert()
 
@@ -57,7 +56,8 @@ beehive1 = beehive(115,
                    )
 beehive2 = beehive(210,
                    379,
-                   flower2.honey)
+                   flower2.honey
+                   )
 
 #   falling enemy
 enemy1 = enemy(random.randint(0 + limit, width_window - limit), 0, False)
@@ -66,13 +66,6 @@ enemy3 = enemy(random.randint(0 + limit, width_window - limit), 0, False)
 enemy4 = enemy(random.randint(0 + limit, width_window - limit), 0, False)
 enemy5 = enemy(random.randint(0 + limit, width_window - limit), 0, False)
 
-enemy01 = enemy(600, 300, False)
-# enemy02 = obstacle(300,300,400,171,False)
-
-
-# Bubble (Shield)
-
-bubble1 = bubble(random.randint(0+limit, width_window - limit), 0)
 
 # -----------------------------------------------------------------------------
 
@@ -140,14 +133,14 @@ def restart():
 
 def falling_enemy():
 
-    global enemy1, enemy2, enemy3, enemy4, enemy5, enemy01
+    global enemy1, enemy2, enemy3, enemy4, enemy5
 
     if beehive1.honey != beehive1.honey_max or beehive2.honey != beehive2.honey_max:
 
         #enemy1
 
         if enemy1.create and mybee.first_touch:
-            if enemy1.y>height_window:
+            if enemy1.y > height_window:
                 enemy1 = enemy(random.randint(0 + limit, width_window - limit-enemy1.width), 0, True)
             enemy1.y += enemy1.speed
             if mybee.rect.colliderect(enemy1.rect):
@@ -197,9 +190,6 @@ def falling_enemy():
                 if mybee.rect.colliderect(enemy5.rect):
                     restart()
                 enemy5.create_rect()
-        if enemy01.create:
-            if mybee.rect.colliderect((enemy01.rect)):
-                restart()
     else:
         enemy1.create = False
         enemy2.create = False
@@ -356,8 +346,6 @@ def maingame(difficulty):
         if enemy5.create:
             if seconds >= 6 or minutes >= 1:
                 main_window.blit(enemy_image, (enemy5.x, enemy5.y))
-        if enemy01.create:
-            main_window.blit(enemy_image, (enemy01.x, enemy01.y))
 
         main_window.blit(timelabel, (488, 0))
         main_window.blit(beehive1_label, (135, 448))
@@ -437,20 +425,20 @@ about_menu.add_option('Return to menu', PYGAME_MENU_BACK)
 # HELP
 
 help_menu = pygameMenu.TextMenu(main_window,
-                                 dopause=True,
-                                 bgfun=mainmenu_background,
-                                 color_selected=(0,0,0),
-                                 font=pygameMenu.fonts.FONT_BEBAS,
-                                 font_color=(255,255,255),
-                                 # font_size_title=30,
-                                 # font_title=pygameMenu.fonts.FONT_8BIT,
+                                 dopause = True,
+                                 bgfun = mainmenu_background,
+                                 color_selected =(0, 0, 0),
+                                 font = pygameMenu.fonts.FONT_BEBAS,
+                                 font_color =(255, 255, 255),
+                                 # font_size_title = 30,
+                                 # font_title = pygameMenu.fonts.FONT_8BIT,
                                  menu_color=(228, 55, 36),
-                                 menu_color_title=(0,0,0),
+                                 menu_color_title=(0, 0, 0),
                                  menu_height=int(height_window * 0.6),
                                  menu_width=int(width_window * 0.6),
                                  onclose=PYGAME_MENU_DISABLE_CLOSE,
                                  option_shadow=False,
-                                 text_color=(255,255,255),
+                                 text_color=(255, 255, 255),
                                  text_fontsize=20,
                                  title='help',
                                  window_height=height_window,

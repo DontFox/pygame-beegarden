@@ -1,17 +1,4 @@
-# python-beegarden
-python, pygame
+# Bee in the forest. How to collect all the pollen?
 
-plan:
-  - honey count(complete)
-  - time(complete)
-  - score
-  - enemies
-  - change images to oversize
-  - common function for enemies
-  - hard mode take 2 or more flowers
-  - change background (esey,medium,hard)
-  - enemies like a rain
-  - таблица лидеров
-  - битые справйты
-  - endless mode
-  - Bubble(core and sprites)
+python, pygame, pygame.Menu
+

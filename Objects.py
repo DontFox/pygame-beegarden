@@ -74,20 +74,8 @@ class enemy:
 
     def create_rect(self):
         self.rect = pygame.Rect((self.x, self.y), (self.width, self.height))
-        self.rect2 = pygame.Rect((self.x, self.y), (self.width, height_window))
 
     def restart(self, x, y):
         self.x = x
         self.y = y
         self.create = False
-
-
-class obstacle(enemy):
-
-    def __init__(self, x, y, width, height, create):
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-        self.create = create
-        self.rect = pygame.Rect((self.x, self.y), (self.width, self.height))
